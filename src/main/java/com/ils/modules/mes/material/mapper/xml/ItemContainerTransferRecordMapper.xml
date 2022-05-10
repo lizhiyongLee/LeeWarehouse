@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.material.mapper.ItemContainerTransferRecordMapper">
+    <resultMap id="ItemContainerTransferRecordResultMap"  type="com.ils.modules.mes.material.entity.ItemContainerTransferRecord">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="container_manage_id" property="containerManageId" jdbcType="VARCHAR" />
+        <result column="transfer_status" property="transferStatus" jdbcType="VARCHAR" />
+        <result column="father_qrcode" property="fatherQrcode" jdbcType="VARCHAR" />
+        <result column="container_qrcode" property="containerQrcode" jdbcType="VARCHAR" />
+        <result column="container_code" property="containerCode" jdbcType="VARCHAR" />
+        <result column="container_name" property="containerName" jdbcType="VARCHAR" />
+        <result column="container_status" property="containerStatus" jdbcType="VARCHAR" />
+        <result column="event_id" property="eventId" jdbcType="VARCHAR" />
+        <result column="event_name" property="eventName" jdbcType="VARCHAR" />
+        <result column="event_object" property="eventObject" jdbcType="VARCHAR" />
+        <result column="bill_code" property="billCode" jdbcType="VARCHAR" />
+        <result column="out_storage_code" property="outStorageCode" jdbcType="VARCHAR" />
+        <result column="out_storage_name" property="outStorageName" jdbcType="VARCHAR" />
+        <result column="out_storage_employee" property="outStorageEmployee" jdbcType="VARCHAR" />
+        <result column="out_time" property="outTime" jdbcType="TIMESTAMP" />
+        <result column="out_note" property="outNote" jdbcType="VARCHAR" />
+        <result column="hope_in_house_code" property="hopeInHouseCode" jdbcType="VARCHAR" />
+        <result column="hope_in_house_name" property="hopeInHouseName" jdbcType="VARCHAR" />
+        <result column="in_storage_code" property="inStorageCode" jdbcType="VARCHAR" />
+        <result column="in_storage_name" property="inStorageName" jdbcType="VARCHAR" />
+        <result column="in_storage_employee" property="inStorageEmployee" jdbcType="VARCHAR" />
+        <result column="in_time" property="inTime" jdbcType="TIMESTAMP" />
+        <result column="in_note" property="inNote" jdbcType="VARCHAR" />
+        <result column="quality_status" property="qualityStatus" jdbcType="VARCHAR" />
+        <result column="sop_step_id" property="sopStepId" jdbcType="VARCHAR"/>
+        <result column="sop_control_id" property="sopControlId" jdbcType="VARCHAR"/>
+        <result column="task_id" property="taskId" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , container_manage_id , transfer_status , father_qrcode , container_qrcode , container_code, container_name , container_status , event_id , event_name , event_object , bill_code , out_storage_code , out_storage_name , out_storage_employee , out_time , out_note , hope_in_house_code , hope_in_house_name , in_storage_code , in_storage_name , in_storage_employee , in_time , in_note , quality_status , sop_control_id , sop_step_id , task_id , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <select id="selectByMainId" parameterType="java.lang.String" resultMap="ItemContainerTransferRecordResultMap">
+        SELECT <include refid="base_column_list" />
+        FROM  mes_item_container_transfer_record
+        WHERE
+        container_manage_id = #{id}
+    </select>
+</mapper>

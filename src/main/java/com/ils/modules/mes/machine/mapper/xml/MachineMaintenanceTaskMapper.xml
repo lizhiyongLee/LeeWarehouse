@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.machine.mapper.MachineMaintenanceTaskMapper">
+    <resultMap id="MachineMaintenanceTaskResultMap" type="com.ils.modules.mes.machine.entity.MachineMaintenanceTask">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="maintenance_type" property="maintenanceType" jdbcType="VARCHAR"/>
+        <result column="task_code" property="taskCode" jdbcType="VARCHAR"/>
+        <result column="task_title" property="taskTitle" jdbcType="VARCHAR"/>
+        <result column="policy_id" property="policyId" jdbcType="VARCHAR"/>
+        <result column="policy_code" property="policyCode" jdbcType="VARCHAR"/>
+        <result column="policy_name" property="policyName" jdbcType="VARCHAR"/>
+        <result column="maintain_machine_id" property="maintainMachineId" jdbcType="VARCHAR"/>
+        <result column="template_id" property="templateId" jdbcType="VARCHAR"/>
+        <result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP"/>
+        <result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP"/>
+        <result column="real_start_time" property="realStartTime" jdbcType="TIMESTAMP"/>
+        <result column="real_end_time" property="realEndTime" jdbcType="TIMESTAMP"/>
+        <result column="acceptor" property="acceptor" jdbcType="VARCHAR"/>
+        <result column="real_excuter" property="realExcuter" jdbcType="VARCHAR"/>
+        <result column="attach" property="attach" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+    <resultMap id="MaintenanceTaskVOMap" type="com.ils.modules.mes.machine.vo.MaintenanceTaskVO"
+               extends="MachineMaintenanceTaskResultMap">
+        <result column="machine_name" property="machineName" jdbcType="VARCHAR"/>
+        <result column="machine_code" property="machineCode" jdbcType="VARCHAR"/>
+        <result column="machine_type_id" property="machineTypeId" jdbcType="VARCHAR"/>
+        <result column="work_shop_id" property="workShopId" jdbcType="VARCHAR"/>
+        <result column="work_station_id" property="workStationId" jdbcType="VARCHAR"/>
+        <result column="label_id" property="labelId" jdbcType="VARCHAR"/>
+        <result column="level_id" property="levelId" jdbcType="VARCHAR"/>
+        <result column="policy_rule" property="policyRule" jdbcType="VARCHAR"/>
+        <result column="employee_name" property="employeeName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="MaintenanceTaskDetailVOResultMap" type="com.ils.modules.mes.machine.vo.MaintenanceTaskDetailVO"
+               extends="MachineMaintenanceTaskResultMap">
+        <result column="machine_name" property="machineName" jdbcType="VARCHAR"/>
+        <result column="machine_code" property="machineCode" jdbcType="VARCHAR"/>
+        <result column="machine_type_id" property="machineTypeId" jdbcType="VARCHAR"/>
+        <result column="label_id" property="labelType" jdbcType="VARCHAR"/>
+        <result column="qr_code" property="qrcode" jdbcType="VARCHAR"/>
+        <result column="work_shop_id" property="workshopId" jdbcType="VARCHAR"/>
+        <result column="work_station_id" property="workStation" jdbcType="VARCHAR"/>
+        <result column="task_type" property="taskType" jdbcType="VARCHAR"/>
+        <result column="first_turn_on_date" property="firstTurnOnDate" jdbcType="TIMESTAMP"/>
+        <result column="employee_name" property="planExcuter" jdbcType="VARCHAR"/>
+        <result column="policy_group_id" property="policyGroupId" jdbcType="VARCHAR"/>
+        <result column="policy_description" property="policyDescription" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="policy_rule" property="policyRule" jdbcType="VARCHAR"/>
+        <result column="rule_name" property="ruleName" jdbcType="VARCHAR"/>
+        <result column="qty" property="qty" jdbcType="INTEGER"/>
+        <result column="unit" property="unit" jdbcType="VARCHAR"/>
+        <result column="plan_time" property="planTime" jdbcType="INTEGER"/>
+        <result column="time_unit" property="timeUnit" jdbcType="VARCHAR"/>
+        <result column="template_id" property="policyTemplateId" jdbcType="VARCHAR"/>
+        <result column="is_scan" property="scan" jdbcType="VARCHAR"/>
+        <result column="is_confirm" property="confirm" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="MaintenancePageListWithPhoneVOResultMap" extends="MachineMaintenanceTaskResultMap"
+               type="com.ils.modules.mes.machine.vo.MaintenancePageListWithPhoneVO">
+        <result column="machine_name" property="machineName" jdbcType="VARCHAR"/>
+        <result column="machine_code" property="machineCode" jdbcType="VARCHAR"/>
+        <result column="employee_name" property="planExcuter" jdbcType="VARCHAR"/>
+        <result column="real_excuter_name" property="realExcuterName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="base_column_list">
+      id ,tenant_id , maintenance_type , task_code , task_title , policy_id , policy_code , policy_name , maintain_machine_id , template_id , plan_start_time , plan_end_time , real_start_time , real_end_time , acceptor , real_excuter , attach , status , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <select id="listPage" resultMap="MaintenanceTaskVOMap">
+        SELECT c.*
+        FROM (
+        SELECT a.*, machine_name, machine_code, machine_type_id, work_shop_id
+        , work_station_id, label_id, level_id, employee_name, policy_rule
+        FROM mes_machine_maintenance_task a
+        LEFT JOIN (
+        SELECT b.id, machine_name, machine_code, machine_type_id, work_shop_id
+        , e.id AS work_station_id , c.label_id, c.level_id, employee_name, policy_rule
+        FROM mes_machine_maintenance_task b
+        INNER JOIN mes_machine c ON b.maintain_machine_id = c.id
+        LEFT JOIN mes_machine_type d ON c.machine_type_id = d.id
+        LEFT JOIN mes_workstation e ON e.equipment = c.id
+        LEFT JOIN mes_machine_policy h ON h.id = b.policy_id
+        LEFT JOIN (
+        SELECT i.repair_task_id, GROUP_CONCAT(employee_name) AS employee_name
+        FROM mes_machine_maintenance_task_employee i
+        where is_deleted = 0 and i.employee_id = #{userId}
+        GROUP BY repair_task_id
+        ) f
+        ON b.id = f.repair_task_id
+        ) g
+        ON g.id = a.id
+
+        ) c ${ew.customSqlSegment}
+  </select>
+    <select id="selectMaintenanceDetailById" resultMap="MaintenanceTaskDetailVOResultMap" parameterType="string">
+        SELECT a.*, employee_name, b.machine_name, b.machine_type_id, b.machine_code
+             , b.qr_code, b.work_shop_id, b.label_id, maintenance_type AS task_type, b.first_turn_on_date
+             , c.policy_rule, c.qty, c.unit, c.plan_time, c.time_unit
+             , c.policy_description, policy_group_id, c.template_id AS policyTemplate, c.start_time, c.end_time
+             , c.is_scan, c.rule_name, c.is_confirm
+             , (
+            SELECT id
+            FROM mes_workstation
+            WHERE equipment = b.id
+        ) AS work_station_id
+        FROM mes_machine_maintenance_task a
+                 LEFT JOIN mes_machine_policy c ON a.policy_id = c.id
+                 LEFT JOIN mes_machine b ON c.machine_id = b.id
+                 LEFT JOIN (
+            SELECT repair_task_id, GROUP_CONCAT(employee_name) AS employee_name
+            FROM mes_machine_maintenance_task_employee
+            WHERE is_deleted = 0
+            GROUP BY repair_task_id
+        ) d
+                           ON a.id = d.repair_task_id
+        WHERE a.is_deleted = 0
+          AND b.is_deleted = 0
+          AND c.is_deleted = 0
+            AND a.id = #{maintenanceTaskId}
+            AND a.maintenance_type = #{type}
+    </select>
+
+    <select id="listPageWithPhone" resultMap="MaintenancePageListWithPhoneVOResultMap">
+        SELECT  a.<include refid="base_column_list" />,
+               d.machine_name,
+               d.machine_code,
+               (SELECT GROUP_CONCAT(employee_name)
+                FROM mes_machine_maintenance_task_employee c
+                WHERE c.tenant_id = a.tenant_id
+                AND c.repair_task_id = a.id
+				AND c.employee_id = #{userId}
+				AND c.is_deleted = 0) as employee_name,
+               (SELECT GROUP_CONCAT(b.realname)
+                FROM sys_user b
+                WHERE b.id= #{userId}
+                  AND b.is_deleted = 0) AS real_excuter_name
+        FROM    mes_machine_maintenance_task  a
+                 LEFT JOIN (select id,machine_name,machine_code from mes_machine) d ON a.maintain_machine_id = d.id ${ew.customSqlSegment}
+    </select>
+    <select id="queryMaintenanceTaskById" parameterType="string" resultMap="MaintenancePageListWithPhoneVOResultMap">
+        SELECT a.*, machine_code,machine_name , employee_name
+        FROM mes_machine_maintenance_task a
+                 LEFT JOIN mes_machine b ON a.maintain_machine_id = b.id
+                 LEFT JOIN (
+            SELECT repair_task_id, GROUP_CONCAT(employee_name) AS employee_name
+            FROM mes_machine_maintenance_task_employee
+            GROUP BY repair_task_id
+        ) c
+                           ON c.repair_task_id = a.id where a.id = #{taskId}
+    </select>
+
+    <select id="queryWaitMaintenanceTask" resultType="string">
+        select maintain_machine_id
+        from mes_machine_maintenance_task
+        where maintenance_type = #{taskType}
+            and status in(1,2,3)
+        group by maintain_machine_id
+    </select>
+</mapper>

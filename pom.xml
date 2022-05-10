@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.ilsframework.boot</groupId>
+    <artifactId>ils-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>imes</artifactId>
+  
+  <repositories>
+		<repository>
+			<id>aliyun</id>
+			<name>aliyun Repository</name>
+			<url>http://10.1.20.105:8081/repository/maven-public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.ilsframework.boot</groupId>
+			<artifactId>ils-system</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+			<dependency>
+			<groupId>org.ilsframework.boot</groupId>
+			<artifactId>ils-workflow</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>license-verify</artifactId>
+	        <groupId>org.ilsframework.boot</groupId>
+	        <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+		<!-- <dependency>
+                <groupId>org.ilsframework.boot</groupId>
+                <artifactId>ils-interface</artifactId>
+                <version>${project.version}</version>
+            </dependency> -->
+	</dependencies>
+	
+<!--	<build>-->
+<!--		<plugins>-->
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--			</plugin>-->
+<!--			<plugin>-->
+<!--                    <groupId>pl.project13.maven</groupId>-->
+<!--                    <artifactId>git-commit-id-plugin</artifactId>-->
+<!--                </plugin>-->
+<!--		</plugins>-->
+<!--	</build>-->
+</project>

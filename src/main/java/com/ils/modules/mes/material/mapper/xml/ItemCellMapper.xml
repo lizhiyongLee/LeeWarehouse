@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.material.mapper.ItemCellMapper">
+    <resultMap id="ItemCellResultMap"  type="com.ils.modules.mes.material.entity.ItemCell"> 
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+        <result column="father_qrcode" property="fatherQrcode" jdbcType="VARCHAR" />
+        <result column="batch" property="batch" jdbcType="VARCHAR" />
+        <result column="seq_num" property="seqNum" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="spec" property="spec" jdbcType="VARCHAR" />
+        <result column="qty" property="qty" jdbcType="DECIMAL" />
+        <result column="unit_id" property="unitId" jdbcType="VARCHAR" />
+        <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+        <result column="storage_id" property="storageId" jdbcType="VARCHAR" />
+        <result column="storage_code" property="storageCode" jdbcType="VARCHAR" />
+        <result column="storage_name" property="storageName" jdbcType="VARCHAR" />
+        <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+        <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+        <result column="house_code" property="houseCode" jdbcType="VARCHAR" />
+        <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+        <result column="hope_in_storage_code" property="hopeInStorageCode" jdbcType="VARCHAR" />
+        <result column="hope_in_storage_name" property="hopeInStorageName" jdbcType="VARCHAR" />
+        <result column="position_status" property="positionStatus" jdbcType="VARCHAR" />
+        <result column="qrcode_status" property="qrcodeStatus" jdbcType="VARCHAR" />
+        <result column="qc_status" property="qcStatus" jdbcType="VARCHAR" />
+        <result column="business_status" property="businessStatus" jdbcType="VARCHAR" />
+        <result column="item_level" property="itemLevel" jdbcType="VARCHAR" />
+        <result column="sale_order_id" property="saleOrderId" jdbcType="VARCHAR" />
+        <result column="sale_order_no" property="saleOrderNo" jdbcType="VARCHAR" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
+        <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+        <result column="supplier_batch" property="supplierBatch" jdbcType="VARCHAR" />
+        <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+        <result column="customer_batch" property="customerBatch" jdbcType="VARCHAR" />
+        <result column="produce_date" property="produceDate" jdbcType="DATE" />
+        <result column="valid_date" property="validDate" jdbcType="DATE" />
+        <result column="from_process" property="fromProcess" jdbcType="VARCHAR" />
+        <result column="now_process" property="nowProcess" jdbcType="VARCHAR" />
+        <result column="item_type" property="itemType" jdbcType="VARCHAR" />
+        <result column="manage_way" property="manageWay" jdbcType="VARCHAR" />
+        <result column="qc_time" property="qcTime" jdbcType="TIMESTAMP" />
+        <result column="inventory_check_time" property="inventoryCheckTime" jdbcType="TIMESTAMP" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="QrCodeItemCellFollowVOMap" extends="ItemCellResultMap" type="com.ils.modules.mes.material.vo.QrCodeItemCellFollowVO">
+        <result column="employee_name" property="workers" jdbcType="VARCHAR"/>
+        <result column="station_name" property="workStation" jdbcType="VARCHAR"/>
+        <result column="accept_time" property="acceptTime" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="ItemCellBatchVOResultMap"  type="com.ils.modules.mes.material.vo.ItemCellBatchVO">       
+        <result column="batch" property="batchNo" jdbcType="VARCHAR" />
+        <result column="qc_status" property="qcStatus" jdbcType="VARCHAR" />
+        <result column="qty" property="qty" jdbcType="DECIMAL" />
+         <result column="unit_id" property="unit" jdbcType="VARCHAR" />
+         <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="QcInfoDetailVOResultMap" type="com.ils.modules.mes.material.vo.QcInfoDetailVO">
+        <result column="task_code" property="taskCode" jdbcType="VARCHAR" />
+        <result column="qc_type" property="qcType" jdbcType="VARCHAR" />
+        <result column="method_name" property="methodName" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="TransferRecordResultMap" type="com.ils.modules.mes.material.vo.TransferRecordVO">
+        <result column="employee" property="employee" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="TIMESTAMP"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="location" property="location" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="ProcessMaterialQuantityVOResultMap" type="com.ils.modules.mes.material.vo.ProcessMaterialQuantityVO">
+        <result column="process_name" property="processName" jdbcType="VARCHAR"/>
+        <result column="process_code" property="processCode" jdbcType="VARCHAR"/>
+        <result column="qty" property="qty" jdbcType="DECIMAL"/>
+        <result column="percentage" property="percentage" jdbcType="DECIMAL"/>
+    </resultMap>
+    <resultMap id="DashBoardProcessItemQtyVOResultMap" type="com.ils.modules.mes.material.vo.DashBoardProcessItemQtyVO">
+        <result column="process_id" property="processId" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="value" property="value" jdbcType="DECIMAL"/>
+    </resultMap>
+    <resultMap id="DashBoardDataVOResultMap" type="com.ils.modules.mes.material.vo.DashBoardDataVO">
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="value" property="value" jdbcType="DECIMAL"/>
+    </resultMap>
+   <sql id="base_column_list">
+     id , tenant_id , qrcode , father_qrcode , batch , seq_num , item_id , item_code , item_name , spec , qty , unit_id , unit_name , storage_id , storage_code , storage_name , area_code , area_name , house_code , house_name , hope_in_storage_code , hope_in_storage_name , position_status , qrcode_status , qc_status , business_status , item_level , sale_order_id , sale_order_no , order_id , order_no , supplier_id , supplier_name , supplier_batch , customer_id , customer_name , customer_batch , produce_date , valid_date , from_process , now_process , item_type , manage_way , qc_time , inventory_check_time , attach , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+    <sql id="item_cell_list">
+        id, tenant_id, qrcode, father_qrcode, batch , seq_num, item_id, item_code, item_name, spec , unit_id, storage_id, storage_code, storage_name, area_code , area_name, house_code, house_name, hope_in_storage_code, hope_in_storage_name , position_status, qrcode_status, qc_status, business_status, item_level , sale_order_id, sale_order_no, order_id, order_no, supplier_id , supplier_name, supplier_batch, customer_id, customer_name, customer_batch , produce_date, valid_date, from_process , item_type , manage_way, qc_time, inventory_check_time, attach, note , create_by, create_time, update_by, update_time, is_deleted
+    </sql>
+    <sql id="item_cell_storage_list">
+        tenant_id,  item_name, item_code, qc_status,storage_code,storage_name,spec ,area_code ,area_name ,house_code ,house_name,now_process
+    </sql>
+  
+  
+  <select id="queryBatchList" resultMap="ItemCellBatchVOResultMap">
+		select batch ,unit_id,unit_name,qc_status,sum(ifnull(qty,0)) qty
+		from mes_item_cell where item_id =  #{itemId}
+ 		and storage_id= #{storageId} 	
+ 		and unit_id = #{unit}	
+		group by batch,qc_status,unit_id,unit_name
+	</select>
+    <select id="queryCountQrcodeInAllPlace" resultType="integer">
+        SELECT COUNT(1)
+        FROM (
+            SELECT qrcode
+            FROM mes_item_cell
+            UNION
+            SELECT qrcode
+            FROM mes_work_shop
+            UNION
+            SELECT qrcode
+            FROM mes_work_line
+            UNION
+            SELECT qrcode
+            FROM mes_workstation
+            UNION
+            SELECT qrcode
+            FROM mes_ware_house
+            UNION
+            SELECT qrcode
+            FROM mes_ware_storage
+            UNION
+            SELECT qr_code AS qrcode
+            FROM mes_machine
+            UNION
+            SELECT qrcode
+            FROM mes_item_container
+        ) a
+        WHERE qrcode = #{qrCode}
+    </select>
+    <select id="queryByQrcode" resultMap="ItemCellResultMap" parameterType="string">
+        select <include refid="base_column_list" /> from mes_item_cell where qrcode = #{qrcode}
+    </select>
+    <select id="queryOutStocksItemCell" parameterType="string" resultMap="ItemCellResultMap">
+        SELECT <include refid="base_column_list" />
+        FROM ( SELECT * FROM mes_item_cell WHERE qty > 0 and manage_way in (2,3)) a
+        WHERE storage_code = #{code}
+            OR area_code = #{code}
+            OR house_code = #{code}
+    </select>
+
+    <select id="queryMaterialLabelFollow" resultMap="QrCodeItemCellFollowVOMap">
+        SELECT
+            d.*,
+            c.employee_name,
+            c.station_name,
+            c.accept_time,
+            c.station_id
+        FROM
+            (select * from mes_item_cell where manage_way = '1' and qrcode is not null ) d
+            LEFT JOIN (
+        SELECT
+            b.qrcode as code,
+            b.employee_name,
+            b.station_name,
+            b.station_id,
+            b.create_time as accept_time
+        FROM
+            ( SELECT qrcode, MAX( create_time ) AS create_time FROM mes_work_produce_record WHERE qrcode IS NOT NULL GROUP BY qrcode ) a
+            LEFT JOIN mes_work_produce_record b ON a.qrcode = b.qrcode
+            AND a.create_time = b.create_time
+            ) c ON c.code = d.qrcode ${ew.customSqlSegment}
+    </select>
+
+    <select id="listPage" resultMap="ItemCellResultMap" >
+        SELECT <include refid="item_cell_list"/>,now_process
+        , (
+        SELECT CONCAT(0 + CAST(h.qty AS CHAR), IFNULL(h.unit_name, ''), IF(GROUP_CONCAT(numb), ',', ''), IFNULL(GROUP_CONCAT(numb), ''))
+        FROM (
+        SELECT CONCAT(0 + CAST(h.qty / main_unit_qty * convert_qty AS CHAR), IFNULL(unit_name, '')) AS numb
+        FROM (
+        SELECT main_unit_qty, convert_qty
+        , (
+        SELECT unit_name
+        FROM mes_unit
+        WHERE id = convert_unit
+        ) AS unit_name
+        FROM mes_item_unit f
+        WHERE f.item_id = h.item_id
+        ) a
+        ) b
+        ) AS unit_name
+        FROM (
+        SELECT <include refid="item_cell_list"/> , m.qty , m.unit_name
+        , (
+        SELECT process_id
+        FROM mes_work_process_task
+        WHERE id = m.now_process
+        ) AS now_process
+        FROM mes_item_cell m
+        WHERE qty IS NOT NULL
+        AND qty > 0
+        ) h ${ew.customSqlSegment}
+    </select>
+
+    <select id="itemStockQtyPage" resultMap="ItemCellResultMap" >
+        SELECT * FROM ( SELECT <include refid="item_cell_storage_list"/>,CONCAT(0 + CAST(sum(qty) AS CHAR), IFNULL(m.unit_name, '')) AS unit_name
+            FROM mes_item_cell m
+            WHERE qty IS NOT NULL
+                AND qty > 0
+        AND position_status='1'
+        AND storage_code!='' and storage_code IS NOT NULL
+        AND (qrcode_status = '1' OR qrcode_status IS NULL)
+        GROUP BY <include refid="item_cell_storage_list"/>,unit_name) h
+         ${ew.customSqlSegment}
+    </select>
+
+    <select id="queryItemCellByExecutionTask" resultMap="ItemCellResultMap" >
+        select <include refid="base_column_list"></include>
+        from mes_item_cell
+        where id in
+              (select distinct item_cell_state_id from mes_work_produce_record where produce_task_id = #{id});
+    </select>
+
+    <select id="queryTansferRecordById" resultMap="TransferRecordResultMap" >
+        select
+            time,
+            type,
+            employee,
+            location
+        from
+            (
+            SELECT
+                out_time as time,
+                '出库' as type,
+                out_storage_employee as employee,
+                out_storage_name as location
+            FROM
+                mes_item_transfer_record
+            WHERE
+                item_cell_id = #{id}
+                and out_time is not null
+        UNION all
+            select
+                in_time as time,
+                '入库' as type,
+                in_storage_employee as employee,
+                in_storage_name as location
+            from
+                mes_item_transfer_record
+            where
+                item_cell_id = #{id}
+                and in_time is not null
+        UNION all
+            SELECT
+                create_time as time,
+                '收货' as type,
+                create_by as employee,
+                storage_name as location
+            from
+                mes_item_take_delivery_record
+            where
+                item_cell_id = #{id}
+        UNION all
+            select
+                create_time as time,
+                '收货' as type,
+                create_by as employee,
+                storage_name as location
+            from
+                mes_item_delivery_goods_record
+            where
+                item_cell_id = #{id} ) a
+        order by
+            time desc
+    </select>
+
+    <select id="queryQcInfoDetailByQrcode" resultMap="QcInfoDetailVOResultMap" >
+        select
+            mqt.task_code,
+            mqt.qc_type,
+            mqt.method_name,
+            mqt.qc_result as status
+        from
+            mes_qc_task_relate_sample mqtrt
+        left join mes_qc_task mqt on
+            mqt.id = mqtrt.qc_task_id
+        where
+            mqtrt.qrcode = #{qrcode} order by mqtrt.create_time desc
+    </select>
+    <select id="queryQcInfoDetailByBatch" resultMap="QcInfoDetailVOResultMap">
+       select
+            mqt.task_code,
+            mqt.qc_type,
+            mqt.method_name,
+            mqt.qc_result as status
+        from
+            mes_qc_task_relate_sample mqtrt
+        left join mes_qc_task mqt on
+            mqt.id = mqtrt.qc_task_id
+        where
+            mqtrt.batch = #{batch} order by mqtrt.create_time desc
+    </select>
+
+    <select id="queryProcessItemQty" resultMap="ProcessMaterialQuantityVOResultMap">
+        select
+        sum(qty) as qty,
+        process_code,
+        process_name,
+        sum(qty)/(
+        select
+        sum(qty)
+        from
+        mes_item_cell
+        where
+        now_process is not null
+        and now_process &lt;&gt; ''
+        and position_status = '3'
+        and is_deleted = 0
+        and now_process &lt;&gt; 'end') as percentage
+        from
+        (
+        select
+        *
+        from
+        mes_item_cell
+        where
+        now_process is not null
+        and now_process &lt;&gt; ''
+        and position_status = '3'
+        and is_deleted = 0
+        and now_process &lt;&gt; 'end') mic
+        left join mes_work_process_task mwpt on
+        mic.now_process = mwpt.id
+        group by
+        process_name,
+        process_code
+    </select>
+    <select id="queryDashBoardProcessItemQtyVO" resultMap="DashBoardProcessItemQtyVOResultMap" >
+        select sum(qty)     as value,
+        process_name as name,
+        process_id
+        from (select *
+        from mes_item_cell
+        where now_process is not null
+        and now_process &lt;&gt; ''
+        and is_deleted = 0
+        and now_process &lt;&gt; 'end') mic
+        left join mes_work_process_task mwpt on mic.now_process = mwpt.id
+        group by process_name,process_id
+        order by  value desc
+    </select>
+    <select id="querDashBoardItemQty" resultMap="DashBoardDataVOResultMap">
+        SELECT
+            mic.item_name as name,
+            SUM(mic.qty) as value
+        FROM
+            mes_item_cell mic
+        LEFT JOIN mes_work_process_task mwpt on
+            mwpt.id = mic.now_process
+        WHERE
+            mwpt.process_id = #{processId}
+        GROUP BY
+            mic.item_name
+    </select>
+</mapper>

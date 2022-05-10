@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.produce.mapper.PurchaseOrderMapper">
+    <resultMap id="PurchaseOrderResultMap"  type="com.ils.modules.mes.produce.entity.PurchaseOrder"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="purchase_code" property="purchaseCode" jdbcType="VARCHAR" />
+        <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
+        <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+        <result column="handperson_id" property="handpersonId" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="PurchaseOrderVOMap" extends="PurchaseOrderResultMap" type="com.ils.modules.mes.produce.vo.PurchaseOrderVO">
+
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , purchase_code , supplier_id , supplier_name , handperson_id , note , status , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+
+    <select id="listPage" resultMap="PurchaseOrderVOMap">
+        SELECT <include refid="base_column_list" />
+        FROM mes_purchase_order a
+        WHERE a.is_deleted = 0
+        <if test = "(itemName!=null and itemName!='') or (itemCode!=null and itemCode!='')">
+            AND EXISTS (
+            SELECT 1
+            FROM mes_purchase_order_line
+            WHERE purchase_order_id = a.id
+            <if test = "itemCode!=null and itemCode!=''">
+                AND item_code = #{itemCode}
+            </if>
+            <if test = "itemName!=null and itemName!=''">
+                AND item_name = #{itemName}
+            </if>
+            )
+        </if>
+        <if test = " ew.sqlSegment != null and ew.sqlSegment != ''">
+            and ${ew.sqlSegment}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.machine.mapper.MachineTypeParaHeadMapper">
+    <resultMap id="MachineTyoeParaHeadResultMap"  type="com.ils.modules.mes.base.machine.entity.MachineTypeParaHead">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="machine_type_id" property="machineTypeId" jdbcType="VARCHAR" />
+        <result column="para_temp_id" property="paraTempId" jdbcType="VARCHAR" />
+        <result column="para_temp_name" property="paraTempName" jdbcType="VARCHAR" />
+        <result column="para_temp_type" property="paraTempType" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , machine_type_id , para_temp_id , para_temp_name , para_temp_type , note , status , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+    <delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE
+		FROM  mes_machine_type_para_head
+		WHERE
+			 machine_type_id = #{id}
+	</delete>
+
+</mapper>

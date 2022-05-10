@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.ware.mapper.WareFinishedStorageRelateAreaMapper">
+    <resultMap id="WareFinishedStorageRelateAreaResultMap"  type="com.ils.modules.mes.base.ware.entity.WareFinishedStorageRelateArea"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="area_id" property="areaId" jdbcType="VARCHAR" />
+        <result column="finished_storage" property="finishedStorage" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="RelatedVOResultMap" type="com.ils.modules.mes.base.ware.vo.RelatedVO">
+        <result column="storage_name" property="name" jdbcType="VARCHAR"/>
+        <result column="finished_storage" property="storageId" jdbcType="VARCHAR"/>
+        <result column="area_id" property="areaId" jdbcType="VARCHAR"/>
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , area_id , finished_storage , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+    <delete id="delByAreaId">
+        delete from mes_ware_finished_storage_relate_area where area_id = #{areaId}
+    </delete>
+
+
+    <select id="selectFinishStorageByAreaId" parameterType="string" resultMap="WareFinishedStorageRelateAreaResultMap">
+        SELECT b.tenant_id, b.id, b.is_deleted, b.area_id, b.finished_storage
+            , b.create_by, b.create_time, b.update_by, b.update_time
+        FROM (
+            SELECT tenant_id AS tenant_id, id, '' AS up_area, factory_code AS code, factory_name AS name
+                , '1' AS node_type, '' AS duty_person_name, status, '' AS qrcode, note
+            FROM mes_factory
+            WHERE is_deleted = 0
+            UNION
+            SELECT tenant_id AS tenant_id, id, up_area AS up_area, shop_code AS code, shop_name AS name
+                , '2' AS node_type, duty_person_name AS duty_person_name, status, qrcode, note
+            FROM mes_work_shop
+            WHERE is_deleted = 0
+            UNION
+            SELECT tenant_id AS tenant_id, id, up_area AS up_area, line_code AS code, line_name AS name
+                , '3' AS node_type, duty_person_name AS duty_person_name, status, qrcode, note
+            FROM mes_work_line
+            WHERE is_deleted = 0
+            UNION
+            SELECT tenant_id AS tenant_id, id, up_area AS up_area, station_code AS code, station_name AS name
+                , '4' AS node_type, duty_person_name AS duty_person_name, status, qrcode, note
+            FROM mes_workstation
+            WHERE is_deleted = 0
+        ) a
+            LEFT JOIN mes_ware_finished_storage_relate_area b ON a.id = b.area_id
+        WHERE a.id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectFinishStoragesByAreaId" resultMap="RelatedVOResultMap" parameterType="string">
+         select
+            area_id,
+            finished_storage,
+            (select storage_name from mes_ware_storage b2 where b2.id = f1.finished_storage and is_deleted = 0) as storage_name
+        from
+            mes_ware_finished_storage_relate_area f1 where is_deleted = '0'
+    </select>
+</mapper>

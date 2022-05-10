@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.factory.mapper.TeamMapper">
+    <resultMap id="TeamResultMap"  type="com.ils.modules.mes.base.factory.entity.Team"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="team_name" property="teamName" jdbcType="VARCHAR" />
+        <result column="team_code" property="teamCode" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <sql id="base_column_list">
+     tenant_id , id , team_name , team_code , status , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+</mapper>

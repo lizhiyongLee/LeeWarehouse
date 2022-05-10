@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.execution.mapper.WorkProduceDefectClassificationMapper">
+    <resultMap id="WorkProduceDefectClassificationResultMap"  type="com.ils.modules.mes.execution.entity.WorkProduceDefectClassification">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="ng_type_id" property="ngTypeId" jdbcType="VARCHAR" />
+        <result column="ng_type_name" property="ngTypeName" jdbcType="VARCHAR" />
+        <result column="ng_item_id" property="ngItemId" jdbcType="VARCHAR" />
+        <result column="ng_item_name" property="ngItemName" jdbcType="VARCHAR" />
+        <result column="produce_task_id" property="produceTaskId" jdbcType="VARCHAR" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="qty" property="qty" jdbcType="DECIMAL" />
+        <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+        <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+
+    <resultMap id="StatisticsDefectVOResultMap"  type="com.ils.modules.mes.execution.vo.StatisticsDefectVO">
+        <result column="ng_item_name" property="ngItemName" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="defect_qty" property="defectQty" jdbcType="DECIMAL" />
+        <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+        <result column="percentage" property="percentage" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <select id="statisticsDefectProcessMax" resultType="java.lang.String">
+        SELECT  process_name
+        FROM mes_work_produce_defect_classification
+        GROUP BY process_name
+        ORDER By sum(qty) DESC LIMIT 5
+    </select>
+
+    <select id="statisticsDefectByProcess" parameterType="java.lang.String" resultMap="StatisticsDefectVOResultMap">
+        SELECT process_name, ng_item_name, sum(qty) AS defect_qty
+        FROM mes_work_produce_defect_classification
+        WHERE process_name =  #{processName}
+        GROUP BY ng_item_name
+        ORDER By defect_qty DESC LIMIT 10
+    </select>
+
+    <select id="statisticsDefectStationMax" resultType="java.lang.String">
+        SELECT  station_name
+        FROM mes_work_produce_defect_classification
+        GROUP BY station_name
+        ORDER By sum(qty) DESC LIMIT 5
+    </select>
+
+    <select id="statisticsDefectByStation" parameterType="java.lang.String" resultMap="StatisticsDefectVOResultMap">
+        SELECT station_name, ng_item_name, sum(qty) AS defect_qty
+        FROM mes_work_produce_defect_classification
+        WHERE station_name =  #{stationName}
+        GROUP BY ng_item_name
+        ORDER By defect_qty DESC LIMIT 10
+    </select>
+
+    <select id="selectQualityPlato" resultMap="StatisticsDefectVOResultMap">
+        SELECT a.ng_item_name ,sum(qty) AS defect_qty, sum(qty) / (select sum(a.qty) from mes_work_produce_defect_classification a where a.tenant_id = #{tenantId}) * 100 AS percentage
+        FROM mes_work_produce_defect_classification a
+        GROUP BY ng_item_name
+        ORDER BY defect_qty DESC
+        LIMIT 0,10 ;
+    </select>
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.produce.mapper.WorkPlanTaskMapper">
+    <resultMap id="WorkPlanTaskResultMap"  type="com.ils.modules.mes.produce.entity.WorkPlanTask"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="task_code" property="taskCode" jdbcType="VARCHAR" />
+        <result column="task_type" property="taskType" jdbcType="VARCHAR" />
+        <result column="process_task_id" property="processTaskId" jdbcType="VARCHAR" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="seq" property="seq" jdbcType="INTEGER" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+        <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+        <result column="plan_qty" property="planQty" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="user_type" property="userType" jdbcType="VARCHAR" />
+        <result column="team_id" property="teamId" jdbcType="VARCHAR" />
+        <result column="plan_type" property="planType" jdbcType="VARCHAR" />
+        <result column="plan_date" property="planDate" jdbcType="DATE" />
+        <result column="shift_id" property="shiftId" jdbcType="VARCHAR" />
+        <result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP" />
+        <result column="plan_time" property="planTime" jdbcType="DECIMAL" />
+        <result column="time_unit" property="timeUnit" jdbcType="VARCHAR" />
+        <result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP" />
+        <result column="real_start_time" property="realStartTime" jdbcType="TIMESTAMP" />
+        <result column="real_end_time" property="realEndTime" jdbcType="TIMESTAMP" />
+        <result column="distrubute_time" property="distrubuteTime" jdbcType="TIMESTAMP" />
+        <result column="total_qty" property="totalQty" jdbcType="DECIMAL" />
+        <result column="lock_status" property="lockStatus" jdbcType="VARCHAR" />
+        <result column="plan_status" property="planStatus" jdbcType="VARCHAR" />
+        <result column="exe_status" property="exeStatus" jdbcType="VARCHAR" />
+        <result column="is_stock_check" property="stockCheck" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , task_code , task_type , process_task_id , order_id , order_no , batch_no , process_id , process_code , process_name ,seq, item_id , item_code , item_name , station_id , station_code , station_name , plan_qty , unit , user_type , team_id , plan_type , plan_date , shift_id , plan_start_time , plan_time , time_unit , plan_end_time , real_start_time , real_end_time ,distrubute_time, total_qty , lock_status , plan_status , exe_status , is_stock_check , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+    <resultMap id="WorkPlanTaskVOResultMap"  extends="WorkPlanTaskResultMap"   type="com.ils.modules.mes.produce.vo.WorkPlanTaskVO"> 
+    	<result column="employee_Ids" property="employeeIds" jdbcType="VARCHAR" />
+    	<result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <resultMap id="WorkPlanProcessTaskVOResultMap"  extends="WorkPlanTaskResultMap"   type="com.ils.modules.mes.produce.vo.WorkPlanTaskProcessVO"> 
+    	 <result column="prior_code" property="priorCode" jdbcType="VARCHAR" />
+        <result column="next_code" property="nextCode" jdbcType="VARCHAR" />
+        <result column="link_type" property="linkType" jdbcType="VARCHAR" />
+    </resultMap>
+  
+  <insert id="insertBatch">
+    insert into mes_work_plan_task ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.taskCode ,jdbcType=VARCHAR }, #{item.taskType ,jdbcType=VARCHAR }, #{item.processTaskId ,jdbcType=VARCHAR }, #{item.orderId ,jdbcType=VARCHAR }, #{item.orderNo ,jdbcType=VARCHAR }, #{item.batchNo ,jdbcType=VARCHAR }, #{item.processId ,jdbcType=VARCHAR }, #{item.processCode ,jdbcType=VARCHAR }, #{item.processName ,jdbcType=VARCHAR },#{item.seq ,jdbcType=INTEGER }, #{item.itemId ,jdbcType=VARCHAR }, #{item.itemCode ,jdbcType=VARCHAR }, #{item.itemName ,jdbcType=VARCHAR }, #{item.stationId ,jdbcType=VARCHAR }, #{item.stationCode ,jdbcType=VARCHAR }, #{item.stationName ,jdbcType=VARCHAR }, #{item.planQty ,jdbcType=DECIMAL }, #{item.unit ,jdbcType=VARCHAR }, #{item.userType ,jdbcType=VARCHAR }, #{item.teamId ,jdbcType=VARCHAR }, #{item.planType ,jdbcType=VARCHAR }, #{item.planDate ,jdbcType=DATE }, #{item.shiftId ,jdbcType=VARCHAR }, #{item.planStartTime ,jdbcType=TIMESTAMP }, #{item.planTime ,jdbcType=DECIMAL }, #{item.timeUnit ,jdbcType=VARCHAR }, #{item.planEndTime ,jdbcType=TIMESTAMP }, #{item.realStartTime ,jdbcType=TIMESTAMP }, #{item.realEndTime ,jdbcType=TIMESTAMP }, #{item.distrubuteTime ,jdbcType=TIMESTAMP }, #{item.totalQty ,jdbcType=DECIMAL }, #{item.lockStatus ,jdbcType=VARCHAR }, #{item.planStatus ,jdbcType=VARCHAR }, #{item.exeStatus ,jdbcType=VARCHAR }, #{item.stockCheck ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+  
+  <select id="listPage" resultMap="WorkPlanTaskVOResultMap" >
+		select mes_work_plan_task.*,employee_ids, employee_name 
+		from mes_work_plan_task left join (
+		select task_id,group_concat(employee_id) as  employee_ids,
+		group_concat(employee_name) as employee_name 
+		from mes_work_plan_task_employee group by task_id ) d
+		on mes_work_plan_task.id = d.task_id
+		${ew.customSqlSegment}
+  </select>
+  
+	  <select id="queryPlanWorkProcessAscList" resultMap="WorkPlanProcessTaskVOResultMap" parameterType="list">
+		SELECT a.*,t.prior_code,t.next_code,t.link_type FROM mes_work_plan_task a 
+		 inner join mes_work_process_task t on a.process_task_id = t.id 
+		 where  a.is_deleted=0 and  a.id in
+		 <foreach item="item" collection="list" separator="," open="(" close=")" index="">    
+	      #{item, jdbcType=VARCHAR}    
+	    </foreach> 
+		order by a.order_id asc,t.seq asc,a.plan_start_time asc
+	  </select>
+	  
+	    <select id="queryPlanWorkProcessDescList" resultMap="WorkPlanProcessTaskVOResultMap" parameterType="list">
+		SELECT a.*,t.prior_code,t.next_code,t.link_type FROM mes_work_plan_task a 
+		 inner join mes_work_process_task t on a.process_task_id = t.id 
+		 where  a.is_deleted=0 and  a.id in
+		 <foreach item="item" collection="list" separator="," open="(" close=")" index="">    
+	      #{item, jdbcType=VARCHAR}    
+	    </foreach> 
+		order by a.order_id asc,t.seq desc,a.plan_start_time desc
+	  </select>
+  
+</mapper>

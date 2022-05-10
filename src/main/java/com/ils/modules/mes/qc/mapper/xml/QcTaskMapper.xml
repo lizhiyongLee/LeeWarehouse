@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.qc.mapper.QcTaskMapper">
+    <resultMap id="QcTaskResultMap" type="com.ils.modules.mes.qc.entity.QcTask">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="qc_type" property="qcType" jdbcType="VARCHAR"/>
+        <result column="qc_catalog" property="qcCatelog" jdbcType="VARCHAR"/>
+        <result column="task_code" property="taskCode" jdbcType="VARCHAR"/>
+        <result column="raw_task_code" property="rawTaskCode" jdbcType="VARCHAR"/>
+        <result column="related_receipt_type" property="relatedReceiptType" jdbcType="VARCHAR"/>
+        <result column="related_receipt_id" property="relatedReceiptId" jdbcType="VARCHAR"/>
+        <result column="related_receipt_code" property="relatedReceiptCode" jdbcType="VARCHAR"/>
+        <result column="method_id" property="methodId" jdbcType="VARCHAR"/>
+        <result column="method_name" property="methodName" jdbcType="VARCHAR"/>
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="exe_status" property="exeStatus" jdbcType="VARCHAR"/>
+        <result column="qc_result" property="qcResult" jdbcType="VARCHAR"/>
+        <result column="location_type" property="locationType" jdbcType="VARCHAR"/>
+        <result column="location_id" property="locationId" jdbcType="VARCHAR"/>
+        <result column="location_name" property="locationName" jdbcType="VARCHAR"/>
+        <result column="location_code" property="locationCode" jdbcType="VARCHAR"/>
+        <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="batch_no" property="batchNo" jdbcType="VARCHAR"/>
+        <result column="process_id" property="processId" jdbcType="VARCHAR"/>
+        <result column="process_code" property="processCode" jdbcType="VARCHAR"/>
+        <result column="process_name" property="processName" jdbcType="VARCHAR"/>
+        <result column="seq" property="seq" jdbcType="INTEGER"/>
+        <result column="plan_date" property="planDate" jdbcType="DATE"/>
+        <result column="shift_id" property="shiftId" jdbcType="VARCHAR"/>
+        <result column="team_id" property="teamId" jdbcType="VARCHAR"/>
+        <result column="total_qty" property="totalQty" jdbcType="DECIMAL"/>
+        <result column="sample_qty" property="sampleQty" jdbcType="DECIMAL"/>
+        <result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP"/>
+        <result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP"/>
+        <result column="real_start_time" property="realStartTime" jdbcType="TIMESTAMP"/>
+        <result column="real_end_time" property="realEndTime" jdbcType="TIMESTAMP"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="flow_id" property="flowId" jdbcType="VARCHAR"/>
+        <result column="audit_status" property="auditStatus" jdbcType="VARCHAR"/>
+        <result column="sop_step_id" property="sopStepId" jdbcType="VARCHAR"/>
+        <result column="sop_control_id" property="sopControlId" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="QcTaskVOResultMap" extends="QcTaskResultMap" type="com.ils.modules.mes.qc.vo.QcTaskVO">
+        <result column="task_employee" property="taskEmployee" jdbcType="VARCHAR"/>
+        <result column="bad_qty" property="badQty" jdbcType="VARCHAR"/>
+        <result column="bad_rate" property="badRate" jdbcType="VARCHAR"/>
+        <result column="sale_order_no" property="saleOrderNo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="listPage" resultMap="QcTaskVOResultMap">
+       SELECT * FROM
+       ( SELECT a.*,
+        b.bad_qty,
+        (1 - b.good_rate) as bad_rate,
+        (SELECT GROUP_CONCAT(employee_name)
+        FROM mes_qc_task_employee c
+        WHERE excute_task_id = a.id
+        AND a.is_deleted = 0) AS task_employee,
+        (SELECT d.sale_order_id from mes_work_order d WHERE d.id=a.order_id) as sale_order_no
+        FROM mes_qc_task a
+        left join mes_qc_task_report b
+        on a.id = b.qc_task_id ) AS t ${ew.customSqlSegment}
+    </select>
+    <select id="toReceiveQcTaskListPage" resultMap="QcTaskVOResultMap">
+        SELECT a.*,
+               b.bad_qty,
+               (1 - b.good_rate)        as bad_rate,
+               (SELECT GROUP_CONCAT(employee_name)
+                FROM mes_qc_task_employee c
+                WHERE excute_task_id = a.id
+                  AND a.is_deleted = 0) AS task_employee
+        FROM (select *
+                from mes_qc_task a
+                where exe_status = '1' and (
+                     (not exists(select 1 from mes_qc_task_employee where using_type in ('1', '2', '3') and excute_task_id = a.id )
+                         and exists(select 1 from mes_qc_task_employee where using_type = '0' and excute_task_id = a.id and employee_id = #{userId}))
+                   or not exists(select 1 from mes_qc_task_employee where excute_task_id = a.id))) a
+                 left join mes_qc_task_report b on a.id = b.qc_task_id ${ew.customSqlSegment}
+    </select>
+
+    <select id="receivedQcTaskListPage" resultMap="QcTaskVOResultMap">
+        SELECT a.*,
+               b.bad_qty,
+               (1 - b.good_rate)        as bad_rate,
+               (SELECT GROUP_CONCAT(employee_name)
+                FROM mes_qc_task_employee c
+                WHERE excute_task_id = a.id
+                  AND a.is_deleted = 0) AS task_employee
+        FROM (select *
+              from mes_qc_task q
+              where exists(select 1
+                           from mes_qc_task_employee e
+                           where e.excute_task_id = q.id
+                             and e.employee_id = #{userId}
+                             and using_type in (1, 2)
+                        )) a
+                 left join mes_qc_task_report b on a.id = b.qc_task_id ${ew.customSqlSegment}
+    </select>
+    <select id="queryTaskEmployeeByTaskId" parameterType="string" resultType="string">
+        select employee_name
+        from mes_qc_task_employee
+        where using_type in (1, 2)
+          and excute_task_id = #{taskId}
+    </select>
+    <select id="myTaskListPage" resultMap="QcTaskVOResultMap">
+        SELECT a.*,
+               b.bad_qty,
+               (1 - b.good_rate)        as bad_rate,
+               (SELECT GROUP_CONCAT(employee_name)
+                FROM mes_qc_task_employee c
+                WHERE excute_task_id = a.id
+                  AND a.is_deleted = 0) AS task_employee
+        FROM (select *
+              from mes_qc_task q
+              where exists(select 1
+                           from mes_qc_task_employee e
+                           where e.excute_task_id = q.id
+                             and e.using_type in (1, 2)
+                             and e.employee_id = #{userId})
+             ) a
+                 left join mes_qc_task_report b
+                           on a.id = b.qc_task_id ${ew.customSqlSegment}
+    </select>
+</mapper>

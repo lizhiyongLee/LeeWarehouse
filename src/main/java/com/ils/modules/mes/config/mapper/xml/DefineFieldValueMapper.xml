@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.config.mapper.DefineFieldValueMapper">
+    <resultMap id="DefineFieldValueResultMap"  type="com.ils.modules.mes.config.entity.DefineFieldValue"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="table_code" property="tableCode" jdbcType="VARCHAR" />
+        <result column="field_id" property="fieldId" jdbcType="VARCHAR" />
+        <result column="main_id" property="mainId" jdbcType="VARCHAR" />
+        <result column="data_value" property="dataValue" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <resultMap id="DefineFieldValueVOResultMap"  extends="DefineFieldValueResultMap"   type="com.ils.modules.mes.config.vo.DefineFieldValueVO"> 
+        <result column="field_name" property="fieldName" jdbcType="VARCHAR" />
+        <result column="field_type" property="fieldType" jdbcType="VARCHAR" />
+        <result column="scope" property="scope" jdbcType="INTEGER" />
+       
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , table_code , field_id , main_id , data_value , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  <insert id="insertBatch">
+    insert into mes_define_field_value ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.tableCode ,jdbcType=VARCHAR }, #{item.fieldId ,jdbcType=VARCHAR }, #{item.mainId ,jdbcType=VARCHAR }, #{item.dataValue ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+  
+  <select id="queryDefineFieldValue"  parameterType="Map" resultMap="DefineFieldValueVOResultMap">
+        select a.tenant_id ,
+        a.table_code,
+        a.field_name,
+        a.field_desc,
+        a.field_type,
+        a.scope,
+        a.id as field_id,
+        c.main_id,
+        c.data_value
+        from mes_define_field a left join 
+		(select * from mes_define_field_value b where b.table_code=#{tableCode} and b.main_id=#{mainId}) c
+		on  a.id =c.field_id where a.table_code=#{tableCode}  and a.tenant_id=#{tenantId} and a.is_deleted=0
+    </select>
+    
+    <delete id="deleteByMainId"  parameterType="Map" >
+		DELETE 
+		FROM  mes_define_field_value 
+		WHERE main_id = #{mainId} 		
+			 and table_code=#{tableCode} 
+			 and tenant_id=#{tenantId}
+	</delete>
+</mapper>

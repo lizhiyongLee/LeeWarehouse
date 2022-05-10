@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.craft.mapper.RouteLineMethodMapper">
+     <resultMap id="RouteLineMethodResultMap"  type="com.ils.modules.mes.base.craft.entity.RouteLineMethod"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="route_id" property="routeId" jdbcType="VARCHAR" />
+        <result column="route_line_id" property="routeLineId" jdbcType="VARCHAR" />
+        <result column="qc_method_id" property="qcMethodId" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <resultMap id="RouteLineMethodVOResultMap"  extends="RouteLineMethodResultMap" type="com.ils.modules.mes.base.craft.vo.RouteLineMethodVO"> 
+     	<result column="qc_type" property="qcType" jdbcType="VARCHAR" />
+     	<result column="method_name" property="methodName" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    
+    <sql id="base_column_list">
+     tenant_id , id , route_id , route_line_id , qc_method_id , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+	<delete id="deleteByRouteId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_route_line_method 
+		WHERE
+			 route_id = #{routeId} 		
+	</delete>
+	
+	
+	<delete id="deleteByRouteLineId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_route_line_method 
+		WHERE
+			 route_line_id = #{routeLineId} 		
+	</delete>
+	
+	
+	
+	<select id="selectByRouteId" parameterType="java.lang.String" resultMap="RouteLineMethodVOResultMap">
+	SELECT a.*,b.qc_type,b.method_name
+		FROM  mes_route_line_method a inner join mes_qc_method b on a.qc_method_id = b.id
+		WHERE
+			 route_id = #{routeId} 		
+	</select>
+	
+	<select id="selectByRouteLineId" parameterType="java.lang.String" resultMap="RouteLineMethodVOResultMap">
+	SELECT a.*,b.qc_type,b.method_name
+		FROM  mes_route_line_method a inner join mes_qc_method b on a.qc_method_id = b.id
+		WHERE
+			 route_line_id = #{routeLineId} and b.qc_type=#{methodType}
+	</select>
+</mapper>

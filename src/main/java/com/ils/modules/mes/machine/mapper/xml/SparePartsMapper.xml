@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.machine.mapper.SparePartsMapper">
+    <resultMap id="SparePartsResultMap"  type="com.ils.modules.mes.machine.entity.SpareParts">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="type_id" property="typeId" jdbcType="VARCHAR" />
+        <result column="picture" property="picture" jdbcType="VARCHAR" />
+        <result column="spare_parts_code" property="sparePartsCode" jdbcType="VARCHAR" />
+        <result column="spare_parts_name" property="sparePartsName" jdbcType="VARCHAR" />
+        <result column="spare_parts_description" property="sparePartsDescription" jdbcType="VARCHAR" />
+        <result column="model" property="model" jdbcType="VARCHAR" />
+        <result column="qty" property="qty" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="SparePartsRecepitOrSendVOResultMap" type="com.ils.modules.mes.machine.vo.SparePartsReceiptOrSendOrderVO">
+        <result column="order_code" property="orderCode" jdbcType="VARCHAR"/>
+        <result column="order_date" property="orderDate" jdbcType="VARCHAR"/>
+        <result column="storage" property="storage" jdbcType="VARCHAR"/>
+        <result column="flow_type" property="flowType" jdbcType="VARCHAR"/>
+        <result column="oder_type" property="oderType" jdbcType="VARCHAR"/>
+        <result column="qty" property="qty" jdbcType="DECIMAL"/>
+        <result column="spare_parts_id" property="sparePartsId" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="SparePartsQtyVOResultMap" type="com.ils.modules.mes.machine.vo.SparePartsQtyVO">
+        <result column="qty" property="sparePartsQty" jdbcType="DECIMAL" />
+        <result column="house_name" property="storageName" jdbcType="VARCHAR"/>
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , type_id , picture , spare_parts_code , spare_parts_name , spare_parts_description , model , qty , unit , attach , note , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <select id="querySparePartsRelate" resultMap="SparePartsRecepitOrSendVOResultMap">
+        SELECT
+            b.receipt_code AS order_code,
+            b.in_date AS order_date,
+            b.in_storage_name AS STORAGE,
+            '1' AS flow_type,
+            b.receipt_type AS oder_type,
+            b.note,
+            a.qty AS qty,
+            a.spare_parts_id,
+            a.id,
+            b.create_time
+        FROM
+            mes_spare_parts_receipt_line a
+            LEFT JOIN mes_spare_parts_receipt_head b ON a.receipt_head_id = b.id
+        WHERE
+            spare_parts_id = #{id}
+        UNION
+        SELECT
+            d.send_code AS order_code,
+            d.out_date AS order_date,
+            d.out_storage_name AS STORAGE,
+            '2' AS flow_type,
+            d.send_type AS oder_type,
+            d.note,
+            c.qty AS qty,
+            c.spare_parts_id,
+            c.id,
+            d.create_time
+        FROM
+            mes_spare_parts_send_line c
+            LEFT JOIN mes_spare_parts_send_head d ON c.send_head_id = d.id
+        WHERE
+            spare_parts_id = #{id}
+    </select>
+
+    <select id="querySparePartsQtyWithStorage" resultMap="SparePartsQtyVOResultMap" >
+        SELECT
+            house_name , SUM(IFNULL(qty,0)) as qty
+        FROM
+            (
+            SELECT
+                qty,
+                in_storage_id AS storage_id,
+                spare_parts_id,
+                spare_parts_code,
+                spare_parts_name
+            FROM
+                mes_spare_parts_receipt_line UNION All
+            SELECT
+                ( 0-qty ) AS qty,
+                out_storage_id AS storage_id,
+                spare_parts_id,
+                spare_parts_code,
+                spare_parts_name
+            FROM
+                mes_spare_parts_send_line
+            ) c
+            LEFT JOIN mes_spare_parts_storage b ON b.id = c.storage_id
+            LEFT JOIN mes_spare_parts_storage d on b.up_storage_id = d.id
+            LEFT JOIN mes_spare_parts_house a ON d.up_storage_id = a.id
+            WHERE spare_parts_id = #{id}
+         GROUP BY house_name
+    </select>
+
+    <select id="queryQtyByStorageIdAndSparePartId" resultType="decimal" parameterType="string" >
+        select sum(qty)
+        from (
+                 select sum(qty) as qty
+                 from mes_spare_parts_receipt_line
+                 where spare_parts_id = #{sparePartsId}
+                   and in_storage_id = #{storageId}
+                 group by spare_parts_id, in_storage_id
+                 union
+                 select sum(0 - qty) as qty
+                 from mes_spare_parts_send_line
+                 where spare_parts_id = #{sparePartsId}
+                   and out_storage_id = #{storageId}
+                 group by spare_parts_id, out_storage_id) a
+    </select>
+</mapper>

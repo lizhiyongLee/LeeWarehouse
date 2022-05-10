@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.material.mapper.ItemContainerManageDetailMapper">
+    <resultMap id="ItemContainerManageDetailResultMap"  type="com.ils.modules.mes.material.entity.ItemContainerManageDetail">
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="container_manage_id" property="containerManageId" jdbcType="VARCHAR" />
+        <result column="container_id" property="containerId" jdbcType="VARCHAR" />
+        <result column="container_code" property="containerCode" jdbcType="VARCHAR" />
+        <result column="container_qrcode" property="containerQrcode" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="spec" property="spec" jdbcType="VARCHAR" />
+        <result column="item_cell_id" property="itemCellId" jdbcType="VARCHAR" />
+        <result column="item_cell_qrcode" property="itemCellQrcode" jdbcType="VARCHAR" />
+        <result column="qty" property="qty" jdbcType="DECIMAL" />
+        <result column="unit_id" property="unitId" jdbcType="VARCHAR" />
+        <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+        <result column="sequence" property="sequence" jdbcType="INTEGER" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+
+   <sql id="base_column_list">
+     id , tenant_id , container_manage_id , container_id , container_code , container_qrcode , item_id , item_code , item_name , spec , item_cell_id , item_cell_qrcode , qty , unit_id , unit_name , sequence , attach , note , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+
+    <delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE
+		FROM  mes_item_container_manage_detail
+		WHERE
+			 container_manage_id = #{id}
+	</delete>
+
+    <select id="selectByMainId" parameterType="java.lang.String" resultMap="ItemContainerManageDetailResultMap">
+        SELECT <include refid="base_column_list" />
+        FROM  mes_item_container_manage_detail
+        WHERE
+        container_manage_id = #{id}
+        AND is_deleted = 0
+    </select>
+</mapper>

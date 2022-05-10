@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.product.mapper.ProductRouteMethodMapper">
+     <resultMap id="ProductRouteMethodResultMap"  type="com.ils.modules.mes.base.product.entity.ProductRouteMethod"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="product_id" property="productId" jdbcType="VARCHAR" />
+        <result column="product_line_id" property="productLineId" jdbcType="VARCHAR" />
+        <result column="qc_method_id" property="qcMethodId" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+
+    <resultMap id="QcMethodResultMap" type="com.ils.modules.mes.base.qc.entity.QcMethod">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="method_name" property="methodName" jdbcType="VARCHAR"/>
+        <result column="is_auto" property="auto" jdbcType="VARCHAR"/>
+        <result column="qc_type" property="qcType" jdbcType="VARCHAR"/>
+        <result column="qc_way" property="qcWay" jdbcType="VARCHAR"/>
+        <result column="qc_qty" property="qcQty" jdbcType="DECIMAL"/>
+        <result column="record_way" property="recordWay" jdbcType="VARCHAR"/>
+        <result column="is_waste" property="waste" jdbcType="VARCHAR"/>
+        <result column="judge_type" property="judgeType" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="is_allow_null" property="allowNull" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+    
+    
+     <resultMap id="ProductRouteMethodVOResultMap"  extends="ProductRouteMethodResultMap" type="com.ils.modules.mes.base.product.vo.ProductRouteMethodVO"> 
+     	<result column="qc_type" property="qcType" jdbcType="VARCHAR" />
+     	<result column="method_name" property="methodName" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <sql id="base_column_list">
+     tenant_id , id , product_id , product_line_id , qc_method_id , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+	<delete id="deleteByProductId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_product_route_method 
+		WHERE
+			 product_id = #{id} 		
+	</delete>
+	
+	<select id="selectByProductId" parameterType="java.lang.String" resultMap="ProductRouteMethodVOResultMap">
+	SELECT a.*,b.qc_type,b.method_name
+		FROM  mes_product_route_method a inner join mes_qc_method b on a.qc_method_id = b.id
+		WHERE
+			 product_id = #{id} 		
+	</select>
+    <select id="selectByProductLineIdAndQcMethodType" resultMap="QcMethodResultMap">
+        select mqm.*
+        from mes_product_route_method mprm
+                 left join mes_qc_method mqm on mprm.qc_method_id = mqm.id
+        where mprm.product_line_id = #{productLineId} and mqm.qc_type = #{methodType}
+    </select>
+
+</mapper>

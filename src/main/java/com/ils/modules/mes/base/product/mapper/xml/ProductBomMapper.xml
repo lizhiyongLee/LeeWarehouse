@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.product.mapper.ProductBomMapper">
+     <resultMap id="ProductBomResultMap"  type="com.ils.modules.mes.base.product.entity.ProductBom"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="product_id" property="productId" jdbcType="VARCHAR" />
+        <result column="product_line_id" property="productLineId" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="qty" property="qty" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+        <result column="loss_rate" property="lossRate" jdbcType="DECIMAL" />
+        <result column="is_control" property="control" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <resultMap id="ProductBomVOResultMap" extends="ProductBomResultMap"  type="com.ils.modules.mes.base.product.vo.ProductBomVO">
+    	
+    </resultMap>
+    
+    
+    
+    <sql id="base_column_list">
+     tenant_id , id , product_id , product_line_id , item_id , item_code , item_name , qty , unit ,unit_name, loss_rate , is_control , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+	<delete id="deleteByProductId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_product_bom 
+		WHERE
+			 product_id = #{id} 		
+	</delete>
+	
+	<select id="selectByProductId" parameterType="java.lang.String" resultMap="ProductBomVOResultMap">
+		SELECT <include refid="base_column_list" />
+		FROM  mes_product_bom
+		WHERE
+			 product_id = #{id} 		
+	</select>
+</mapper>

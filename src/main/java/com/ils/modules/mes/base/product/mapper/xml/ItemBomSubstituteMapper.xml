@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.product.mapper.ItemBomSubstituteMapper">
+    <resultMap id="ItemBomSubstituteResultMap"  type="com.ils.modules.mes.base.product.entity.ItemBomSubstitute"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="bom_id" property="bomId" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="subtitute_item_id" property="subtituteItemId" jdbcType="VARCHAR" />
+        <result column="let_subtitute_qty" property="letSubtituteQty" jdbcType="DECIMAL" />
+        <result column="let_subtitute_unit" property="letSubtituteUnit" jdbcType="VARCHAR" />
+       <result column="let_subtitute_unit_name" property="letSubtituteUnitName" jdbcType="VARCHAR" />
+        <result column="subtitute_qty" property="subtituteQty" jdbcType="DECIMAL" />
+        <result column="subtitute_unit" property="subtituteUnit" jdbcType="VARCHAR" />
+        <result column="subtitute_unit_name" property="subtituteUnitName" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <resultMap id="ItemBomSubstituteVOResultMap"  type="com.ils.modules.mes.base.product.vo.ItemBomSubstituteVO">
+    	<result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , bom_id , item_id , subtitute_item_id , let_subtitute_qty , let_subtitute_unit ,let_subtitute_unit_name, subtitute_qty , subtitute_unit ,subtitute_unit_name, subtitute_unit_name,create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  <insert id="insertBatch">
+    insert into mes_item_bom_substitute ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.bomId ,jdbcType=VARCHAR }, #{item.itemId ,jdbcType=VARCHAR }, #{item.subtituteItemId ,jdbcType=VARCHAR }, #{item.letSubtituteQty ,jdbcType=DECIMAL }, 
+    #{item.letSubtituteUnit ,jdbcType=VARCHAR }, #{item.letSubtituteUnitName ,jdbcType=VARCHAR }, #{item.subtituteQty ,jdbcType=DECIMAL }, #{item.subtituteUnit ,jdbcType=VARCHAR }, #{item.subtituteUnitName ,jdbcType=VARCHAR },#{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+  <delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_item_bom_substitute 
+		WHERE
+			 bom_id = #{id} 		
+	</delete>
+  
+<select id="queryBomSubstituteMaterialInfoList" parameterType="java.lang.String" resultMap="ItemBomSubstituteVOResultMap">
+		select a.*,b.item_code,b.item_name from mes_item_bom_substitute a  left join mes_item b  on  a.subtitute_item_id = b.id		
+			${ew.customSqlSegment}	  
+	</select>
+  
+  
+  
+</mapper>

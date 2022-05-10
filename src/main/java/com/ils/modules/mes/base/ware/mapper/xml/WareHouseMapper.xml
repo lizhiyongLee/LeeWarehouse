@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.ware.mapper.WareHouseMapper">
+    <resultMap id="WareHouseResultMap" type="com.ils.modules.mes.base.ware.entity.WareHouse">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="work_shop_id" property="workShopId" jdbcType="VARCHAR"/>
+        <result column="house_code" property="houseCode" jdbcType="VARCHAR"/>
+        <result column="house_name" property="houseName" jdbcType="VARCHAR"/>
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR"/>
+        <result column="is_qcconrol" property="qcconrol" jdbcType="VARCHAR"/>
+        <result column="qc_status" property="qcStatus" jdbcType="VARCHAR"/>
+        <result column="is_capacity" property="capacity" jdbcType="VARCHAR"/>
+        <result column="capacity_item" property="capacityItem" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="attach" property="attach" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <resultMap id="ItemCellFinishedStorageVOResultMap"
+               type="com.ils.modules.mes.base.ware.vo.ItemCellFinishedStorageVO">
+        <result column="ware_house_id" property="wareHouseId" jdbcType="VARCHAR"/>
+        <result column="ware_house_code" property="wareHouseCode" jdbcType="VARCHAR"/>
+        <result column="ware_house_name" property="wareHouseName" jdbcType="VARCHAR"/>
+        <result column="ware_house_qc_status" property="wareHouseQcStatus" jdbcType="VARCHAR"/>
+        <result column="ware_house_qc_control" property="wareHouseQcControl" jdbcType="VARCHAR"/>
+        <result column="first_storage_id" property="firstStorageId" jdbcType="VARCHAR"/>
+        <result column="first_storage_code" property="firstStorageCode" jdbcType="VARCHAR"/>
+        <result column="first_storage_name" property="firstStorageName" jdbcType="VARCHAR"/>
+        <result column="first_qc_status" property="firstQcStatus" jdbcType="VARCHAR"/>
+        <result column="first_qc_control" property="firstQcControl" jdbcType="VARCHAR"/>
+        <result column="second_storage_id" property="secondStorageId" jdbcType="VARCHAR"/>
+        <result column="second_storage_code" property="secondStorageCode" jdbcType="VARCHAR"/>
+        <result column="second_storage_name" property="secondStorageName" jdbcType="VARCHAR"/>
+        <result column="second_qc_status" property="secondQcStatus" jdbcType="VARCHAR"/>
+        <result column="second_qc_control" property="secondQcControl" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="DictModelMap" type="com.ils.common.system.vo.DictModel">
+        <result column="id" property="value" jdbcType="VARCHAR"/>
+        <result column="house_name" property="text" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="DictModeCodelMap" type="com.ils.common.system.vo.DictModel">
+        <result column="house_code" property="value" jdbcType="VARCHAR"/>
+        <result column="house_name" property="text" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="base_column_list">
+     tenant_id , id , type , work_shop_id , house_code , house_name , qrcode , is_qcconrol , qc_status , is_capacity , capacity_item , status , attach , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+
+    <select id="selectAll" resultMap="WareHouseResultMap">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM mes_ware_house where is_deleted = 0
+    </select>
+
+
+    <select id="selectHasFeelingStorage" parameterType="java.lang.String" resultType="java.lang.String">
+        select work_shop_id from mes_ware_house a
+                 left join mes_work_shop b
+                           on a.work_shop_id = b.id where a.type = '2' and b.id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectStorageByStationId" parameterType="string" resultMap="ItemCellFinishedStorageVOResultMap">
+        SELECT d.id AS ware_house_id, d.house_code AS ware_house_code, d.house_name AS ware_house_name, c.id AS first_storage_id, c.storage_code AS first_storage_code
+            , c.storage_name AS first_storage_name, b.id AS second_storage_id, b.storage_code AS second_storage_code, b.storage_name AS second_storage_name
+        FROM mes_ware_finished_storage_relate_area a
+            INNER JOIN (
+                SELECT f.id AS area_id
+                FROM mes_workstation e
+                    LEFT JOIN mes_work_line f ON e.up_area = f.id
+                WHERE e.id = #{id,jdbcType=VARCHAR}
+                UNION
+                SELECT h.id AS area_id
+                FROM mes_workstation e
+                    INNER JOIN mes_work_line f ON e.up_area = f.id
+                    INNER JOIN mes_work_shop h ON f.up_area = h.id
+                WHERE e.id = #{id,jdbcType=VARCHAR}
+                UNION
+                SELECT f.id AS area_id
+                FROM mes_workstation e
+                    INNER JOIN mes_work_shop f ON e.up_area = f.id
+                WHERE e.id = #{id,jdbcType=VARCHAR}
+                UNION
+                SELECT id AS area_id
+                FROM mes_workstation
+                WHERE id = #{id,jdbcType=VARCHAR}
+            ) g
+            ON g.area_id = a.area_id, mes_ware_storage b, mes_ware_storage c, mes_ware_house d
+        WHERE a.finished_storage = b.id
+            AND b.storage_type = '2'
+            AND b.up_storage_id = c.id
+            AND c.storage_type = '1'
+            AND c.up_storage_id = d.id
+            AND a.is_deleted = 0
+        GROUP BY a.finished_storage
+    </select>
+    <select id="selectStorageByStorageCode" parameterType="string" resultMap="ItemCellFinishedStorageVOResultMap">
+        SELECT a.id AS ware_house_id, a.house_code AS ware_house_code, a.house_name AS ware_house_name, a.qc_status AS ware_house_qc_status, a.is_qcconrol AS ware_house_qc_control,
+         b.id AS first_storage_id, b.storage_code AS first_storage_code, b.storage_name AS first_storage_name, b.qc_status AS first_qc_status, b.is_qccontrol AS first_qc_control,
+         c.id AS second_storage_id, c.storage_code AS second_storage_code, c.storage_name AS second_storage_name, c.qc_status AS second_qc_status, c.is_qccontrol AS second_qc_control
+        FROM mes_ware_house a, mes_ware_storage b, mes_ware_storage c
+        WHERE c.up_storage_id = b.id
+          AND b.up_storage_id = a.id
+            AND c.storage_code = #{storageCode}
+    </select>
+
+    <select id="queryWareHouseList" resultMap="DictModelMap">
+    select id,house_name from mes_ware_house
+    </select>
+    <select id="queryByStorageCode" resultMap="WareHouseResultMap">
+        select a.*
+        from mes_ware_house a
+                 left join mes_ware_storage b on a.id = b.up_storage_id
+                 left join mes_ware_storage c on b.id = c.up_storage_id
+        where c.storage_code = #{storageCode}
+    </select>
+    <select id="queryByStorageId" resultType="com.ils.modules.mes.base.ware.entity.WareHouse">
+        select mwh.*
+        from mes_ware_house mwh,
+             mes_ware_storage mws1,
+             mes_ware_storage mws2
+        where mws2.up_storage_id = mws1.id
+          and mws1.up_storage_id = mwh.id
+          and if((select 1 from mes_ware_storage where storage_type = '1' and id = #{storageId}),
+                 mws1.id = #{storageId}, mws2.id = #{storageId});
+    </select>
+    <select id="countWorkShopRelatedWareHouseByAreaId" resultType="java.lang.Integer">
+select count(1) from mes_ware_house where type = 2
+    </select>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.craft.mapper.RouteLineMapper">
+     <resultMap id="RouteLineResultMap"  type="com.ils.modules.mes.base.craft.entity.RouteLine"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="route_id" property="routeId" jdbcType="VARCHAR" />
+        <result column="seq" property="seq" jdbcType="INTEGER" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="prior_code" property="priorCode" jdbcType="VARCHAR" />
+        <result column="next_code" property="nextCode" jdbcType="VARCHAR" />
+        <result column="link_type" property="linkType" jdbcType="VARCHAR" />
+        <result column="in_unit" property="inUnit" jdbcType="VARCHAR" />
+        <result column="out_unit" property="outUnit" jdbcType="VARCHAR" />
+        <result column="in_qty" property="inQty" jdbcType="DECIMAL" />
+        <result column="out_qty" property="outQty" jdbcType="DECIMAL" />
+        <result column="machine_qty" property="machineQty" jdbcType="TINYINT" />
+        <result column="wait_time" property="waitTime" jdbcType="DECIMAL" />
+        <result column="setup_time" property="setupTime" jdbcType="DECIMAL" />
+        <result column="setup_time_unit" property="setupTimeUnit" jdbcType="VARCHAR" />
+        <result column="process_time" property="processTime" jdbcType="DECIMAL" />
+        <result column="mactime_time" property="mactimeTime" jdbcType="DECIMAL" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <resultMap id="RouteLineVOResultMap" extends="RouteLineResultMap"  type="com.ils.modules.mes.base.craft.vo.RouteLineVO"> 
+    </resultMap>
+    <sql id="base_column_list">
+     tenant_id , id , route_id , seq , process_id , process_code , process_name , prior_code , next_code , link_type , in_unit , out_unit , in_qty , out_qty , machine_qty , wait_time , setup_time , setup_time_unit , process_time , mactime_time , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_route_line 
+		WHERE
+			 route_id = #{id} 		
+	</delete>
+	
+	<select id="selectByMainId" parameterType="java.lang.String" resultMap="RouteLineVOResultMap">
+		SELECT <include refid="base_column_list" />
+		FROM  mes_route_line
+		WHERE
+			 route_id = #{id} 	
+			 order by seq asc	
+	</select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.factory.mapper.ReportTemplateControlMapper">
+    <resultMap id="ReportTemplateControlResultMap"  type="com.ils.modules.mes.base.factory.entity.ReportTemplateControl"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="report_template_id" property="reportTemplateId" jdbcType="VARCHAR" />
+        <result column="control_type" property="controlType" jdbcType="VARCHAR" />
+        <result column="control_name" property="controlName" jdbcType="VARCHAR" />
+        <result column="father_control_id" property="fatherControlId" jdbcType="VARCHAR" />
+        <result column="seq" property="seq" jdbcType="INTEGER" />
+        <result column="is_required_field" property="requiredField" jdbcType="VARCHAR" />
+        <result column="remind_type" property="remindType" jdbcType="VARCHAR" />
+        <result column="remind_word" property="remindWord" jdbcType="VARCHAR" />
+        <result column="is_multiple_row" property="multipleRow" jdbcType="VARCHAR" />
+        <result column="option_value" property="optionValue" jdbcType="VARCHAR" />
+        <result column="dis_condition" property="disCondition" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , report_template_id , control_type , control_name , father_control_id , seq , is_required_field , remind_type , remind_word , is_multiple_row , option_value , dis_condition , note , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+  
+
+    <delete id="deleteByMainId" parameterType="string" >
+        delete from
+          mes_report_template_control
+        where
+          report_template_id = #{id}
+    </delete>
+
+    <select id="selectByMainId" parameterType="string" resultMap="ReportTemplateControlResultMap">
+        SELECT
+        <include refid = "base_column_list" />
+        FROM
+        mes_report_template_control
+        where
+        report_template_id = #{mainId}
+        order by
+        seq
+    </select>
+</mapper>

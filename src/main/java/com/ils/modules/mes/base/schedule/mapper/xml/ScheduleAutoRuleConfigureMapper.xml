@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.schedule.mapper.ScheduleAutoRuleConfigureMapper">
+    <resultMap id="ScheduleAutoRuleConfigureResultMap"  type="com.ils.modules.mes.base.schedule.entity.ScheduleAutoRuleConfigure"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="order_rule" property="orderRule" jdbcType="VARCHAR" />
+        <result column="process_rule" property="processRule" jdbcType="VARCHAR" />
+        <result column="station_rule" property="stationRule" jdbcType="VARCHAR" />
+        <result column="split_rule" property="splitRule" jdbcType="VARCHAR" />
+        <result column="dispatch_rule" property="dispatchRule" jdbcType="VARCHAR" />
+        <result column="reserve1" property="reserve1" jdbcType="VARCHAR" />
+        <result column="reserve2" property="reserve2" jdbcType="VARCHAR" />
+        <result column="reserve3" property="reserve3" jdbcType="VARCHAR" />
+        <result column="reserve4" property="reserve4" jdbcType="VARCHAR" />
+        <result column="reserve5" property="reserve5" jdbcType="VARCHAR" />
+        <result column="reserve6" property="reserve6" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , order_rule , process_rule , station_rule , split_rule , dispatch_rule , reserve1 , reserve2 , reserve3 , reserve4 , reserve5 , reserve6 , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  <insert id="insertBatch">
+    insert into mes_schedule_auto_rule_configure ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.orderRule ,jdbcType=VARCHAR }, #{item.processRule ,jdbcType=VARCHAR }, #{item.stationRule ,jdbcType=VARCHAR }, #{item.splitRule ,jdbcType=VARCHAR }, #{item.dispatchRule ,jdbcType=VARCHAR }, #{item.reserve1 ,jdbcType=VARCHAR }, #{item.reserve2 ,jdbcType=VARCHAR }, #{item.reserve3 ,jdbcType=VARCHAR }, #{item.reserve4 ,jdbcType=VARCHAR }, #{item.reserve5 ,jdbcType=VARCHAR }, #{item.reserve6 ,jdbcType=VARCHAR }, #{item.note ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+</mapper>

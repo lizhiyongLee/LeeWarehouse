@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.material.mapper.ItemContainerQtyMapper">
+    <resultMap id="ItemContainerQtyResultMap" type="com.ils.modules.mes.base.material.entity.ItemContainerQty">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="container_id" property="containerId" jdbcType="VARCHAR"/>
+        <result column="container_code" property="containerCode" jdbcType="VARCHAR"/>
+        <result column="container_name" property="containerName" jdbcType="VARCHAR"/>
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="qty" property="qty" jdbcType="DECIMAL"/>
+        <result column="unit" property="unit" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="base_column_list">
+     tenant_id , id , container_id , container_code , container_name , item_id , item_code , item_name , qty , unit , note , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE
+		FROM  mes_item_container_qty
+		WHERE
+			 container_id = #{id}
+	</delete>
+
+    <select id="selectByMainId" parameterType="java.lang.String" resultMap="ItemContainerQtyResultMap">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM mes_item_container_qty
+        WHERE
+        container_id = #{id}
+    </select>
+
+</mapper>

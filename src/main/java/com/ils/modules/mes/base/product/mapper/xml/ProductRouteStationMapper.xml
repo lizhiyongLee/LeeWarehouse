@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.product.mapper.ProductRouteStationMapper">
+     <resultMap id="ProductRouteStationResultMap"  type="com.ils.modules.mes.base.product.entity.ProductRouteStation"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="product_id" property="productId" jdbcType="VARCHAR" />
+        <result column="product_line_id" property="productLineId" jdbcType="VARCHAR" />
+        <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <resultMap id="ProductRouteStationVOResultMap"  extends="ProductRouteStationResultMap" type="com.ils.modules.mes.base.product.vo.ProductRouteStationVO"> 
+	    <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+	    <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <sql id="base_column_list">
+     tenant_id , id , product_id , product_line_id , station_id , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+	<delete id="deleteByProductId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_product_route_station 
+		WHERE
+			 product_id = #{id} 		
+	</delete>
+	
+	<select id="selectByProductId" parameterType="java.lang.String" resultMap="ProductRouteStationVOResultMap">
+	SELECT a.*,b.station_code,b.station_name
+		FROM  mes_product_route_station a inner join mes_workstation b on a.station_id = b.id
+		WHERE
+			 product_id = #{id} 		
+	</select>
+</mapper>

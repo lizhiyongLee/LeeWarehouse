@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.execution.mapper.WorkProduceMaterialRecordMapper">
+    <resultMap id="WorkProduceMaterialRecordResultMap"
+               type="com.ils.modules.mes.execution.entity.WorkProduceMaterialRecord">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="produce_task_id" property="produceTaskId" jdbcType="VARCHAR"/>
+        <result column="feed_type" property="feedType" jdbcType="VARCHAR"/>
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="batch_no" property="batchNo" jdbcType="VARCHAR"/>
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR"/>
+        <result column="back_qrcode" property="backQrcode" jdbcType="VARCHAR"/>
+        <result column="item_cell_state_id" property="itemCellStateId" jdbcType="VARCHAR"/>
+        <result column="qc_status" property="qcStatus" jdbcType="VARCHAR"/>
+        <result column="feed_qty" property="feedQty" jdbcType="DECIMAL"/>
+        <result column="remain_qty" property="remainQty" jdbcType="DECIMAL"/>
+        <result column="used_qty" property="usedQty" jdbcType="DECIMAL"/>
+        <result column="feed_storage_id" property="feedStorageId" jdbcType="VARCHAR"/>
+        <result column="unit" property="unit" jdbcType="VARCHAR"/>
+        <result column="sop_step_id" property="sopStepId" jdbcType="VARCHAR"/>
+        <result column="sop_control_id" property="sopControlId" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="unit_name" property="unitName" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+    <resultMap id="MaterialRecordQtyVOResultMap" type="com.ils.modules.mes.execution.vo.MaterialRecordQtyVO">
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="produce_task_id" property="produceTaskId" jdbcType="VARCHAR"/>
+        <result column="feed_qty" property="feedQty" jdbcType="DECIMAL"/>
+        <result column="undo_qty" property="undoQty" jdbcType="DECIMAL"/>
+    </resultMap>
+    <resultMap id="GroupMaterialRecordVOResultMap" type="com.ils.modules.mes.execution.vo.GroupMaterialRecordVO">
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="main_unit" property="mainUnit" jdbcType="VARCHAR"/>
+        <result column="is_batch" property="batch" jdbcType="VARCHAR"/>
+        <result column="is_qrcode" property="qrcodeFlag" jdbcType="VARCHAR"/>
+        <result column="workflow_type" property="workflowType" jdbcType="VARCHAR"/>
+        <result column="feed_qty" property="feedQty" jdbcType="DECIMAL"/>
+        <result column="undo_qty" property="undoQty" jdbcType="DECIMAL"/>
+        <result column="process_total_qty" property="processTotalQty" jdbcType="DECIMAL"/>
+    </resultMap>
+    <resultMap id="WorkProduceMaterialRecordVOMap" extends="WorkProduceMaterialRecordResultMap"
+               type="com.ils.modules.mes.execution.vo.WorkProduceMaterialRecordVO">
+        <result column="work_station_name" property="workStation" jdbcType="VARCHAR"/>
+        <result column="process_name" property="processName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="MaterialRecordReportVOResultMap" type="com.ils.modules.mes.execution.vo.MaterialRecordReportVO">
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="process_code" property="processCode" jdbcType="VARCHAR"/>
+        <result column="process_name" property="processName" jdbcType="VARCHAR"/>
+        <result column="qty" property="qty" jdbcType="DECIMAL"/>
+        <result column="unit_name" property="unitName" jdbcType="VARCHAR"/>
+        <result column="station_name" property="stationName" jdbcType="VARCHAR"/>
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+     tenant_id , id , produce_task_id , feed_type , item_id , item_code , item_name , batch_no , qrcode , back_qrcode , item_cell_state_id , qc_status,feed_qty , remain_qty , used_qty , feed_storage_id , unit, note , unit_name, sop_step_id , sop_control_id , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <insert id="insertBatch">
+        insert into mes_work_produce_material_record (
+        <include refid="base_column_list"/>
+        ) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR },
+            #{item.produceTaskId ,jdbcType=VARCHAR }, #{item.feedType ,jdbcType=VARCHAR },
+            #{item.itemId ,jdbcType=VARCHAR }, #{item.itemCode ,jdbcType=VARCHAR }, #{item.itemName ,jdbcType=VARCHAR },
+            #{item.batchNo ,jdbcType=VARCHAR }, #{item.qrcode ,jdbcType=VARCHAR },
+            #{item.backQrcode ,jdbcType=VARCHAR }, #{item.itemCellStateId ,jdbcType=VARCHAR },
+            #{item.qcStatus ,jdbcType=VARCHAR }, #{item.feedQty ,jdbcType=DECIMAL },
+            #{item.remainQty ,jdbcType=DECIMAL }, #{item.usedQty ,jdbcType=DECIMAL },
+            #{item.feedStorageId ,jdbcType=VARCHAR }, #{item.unit ,jdbcType=VARCHAR }, #{item.note ,jdbcType=VARCHAR },
+            #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP },
+            #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP },
+            #{item.deleted ,jdbcType=TINYINT })
+        </foreach>
+    </insert>
+
+    <select id="queryItemMaterialPageList" resultMap="GroupMaterialRecordVOResultMap">
+	select mes_item.id as item_id,mes_item.item_code,mes_item.item_name,mes_item.is_batch,mes_item.is_qrcode from mes_item inner join mes_work_order_item_bom
+	on mes_item.id = mes_work_order_item_bom.item_id
+	 ${ew.customSqlSegment}
+  </select>
+
+    <select id="queryItemPage" resultMap="GroupMaterialRecordVOResultMap">
+	select mes_item.id as item_id,mes_item.item_code,mes_item.item_name,mes_item.is_batch,mes_item.is_qrcode from mes_item
+	 ${ew.customSqlSegment}
+	 order by mes_item.id desc
+  </select>
+
+    <select id="queryMaterialRecordQty" resultMap="MaterialRecordQtyVOResultMap">
+		select produce_task_id,item_id,
+		sum(case feed_type
+		when '1' then ifnull(t.feed_qty,0) 
+		else 0 end )feed_qty,
+		sum(case feed_type
+		when '2' then ifnull(t.feed_qty,0) 
+		else 0 end )undo_qty
+		from mes_work_produce_material_record t
+		where produce_task_id=#{produceTaskId ,jdbcType=VARCHAR }
+		and item_id=#{itemId ,jdbcType=VARCHAR }
+		group by produce_task_id,item_id
+  </select>
+    <select id="queryMaterialRecordQtyByQrcode" resultMap="MaterialRecordQtyVOResultMap">
+		select produce_task_id,item_id,
+		sum(case feed_type
+		when '1' then ifnull(t.feed_qty,0) 
+		else 0 end )feed_qty,
+		sum(case feed_type
+		when '2' then ifnull(t.feed_qty,0) 
+		else 0 end )undo_qty
+		from mes_work_produce_material_record t
+		where produce_task_id=#{produceTaskId ,jdbcType=VARCHAR }
+		and item_id=#{itemId ,jdbcType=VARCHAR }
+		and qrcode = #{qrcode ,jdbcType=VARCHAR }
+		group by produce_task_id,item_id
+  </select>
+
+    <select id="queryGroupMaterialRecordPageList" resultMap="GroupMaterialRecordVOResultMap">
+        select a.item_id,a.item_name,a.item_code,b.is_qrcode,b.main_unit,
+        sum(case a.feed_type
+        when '1' then ifnull(a.feed_qty,0)
+        else 0 end ) feed_qty,
+        sum(case a.feed_type
+        when '2' then ifnull(a.feed_qty,0)
+        else 0 end ) undo_qty
+        from mes_work_produce_material_record a ,mes_item b
+        where
+        a.item_id =b.id
+        and a.produce_task_id=#{produceTaskId ,jdbcType=VARCHAR }
+        <if test=" controlId != null and controlId != '' ">
+            and a.sop_control_id = #{controlId}
+        </if>
+        group by a.item_id,a.item_name,a.item_code,b.is_qrcode
+        order by a.item_id desc
+    </select>
+
+
+    <select id="queryGroupProductBomMaterialPageList" resultMap="GroupMaterialRecordVOResultMap">
+        select mes_item.id as item_id,mes_item.item_code,'3' as workflow_type,mes_item.main_unit,
+        mes_item.item_name,mes_item.is_qrcode,mes_item.is_batch,c.total_qty as process_total_qty,
+        ifnull(b.feed_qty,0) as feed_qty,ifnull(b.undo_qty,0) as undo_qty from mes_work_order_bom c inner join mes_item
+        on c.item_id= mes_item.id left join
+        (select a.item_id,
+        sum(case a.feed_type
+        when '1' then ifnull(a.feed_qty,0)
+        else 0 end ) feed_qty,
+        sum(case a.feed_type
+        when '2' then ifnull(a.feed_qty,0)
+        else 0 end ) undo_qty
+        from mes_work_produce_material_record a
+        where
+        a.produce_task_id=#{produceTaskId ,jdbcType=VARCHAR }
+        <if test=" controlId != null and controlId != '' ">
+            and a.sop_control_id = #{controlId}
+        </if>
+        group by a.item_id) b on c.item_id = b.item_id
+        ${ew.customSqlSegment}
+        order by mes_item.id desc
+    </select>
+
+    <select id="queryWorkProduceMaterialRecordByQrcode" parameterType="string"
+            resultMap="WorkProduceMaterialRecordVOMap">
+        SELECT
+            a.update_time,
+            a.item_name,
+            a.batch_no,
+            qc_status,
+            a.update_by,
+            process_name,
+            station_name
+        FROM
+            mes_work_produce_material_record a
+            LEFT JOIN mes_work_produce_task b ON a.produce_task_id = b.id
+            where qrcode = #{qrcode}
+    </select>
+    <select id="queryWorkProduceMaterialRecordFlowByQrcode" resultMap="WorkProduceMaterialRecordVOMap">
+        SELECT
+            a.update_time,
+            a.feed_qty,
+            a.item_name,
+            qc_status,
+            a.update_by,
+            process_name,
+            station_name
+        FROM
+            mes_work_produce_material_record a
+            LEFT JOIN mes_work_produce_task b ON a.produce_task_id = b.id
+        WHERE
+            qrcode = #{qrcode}
+    </select>
+
+    <select id="getMaterialRecord" parameterType="string" resultMap="MaterialRecordReportVOResultMap">
+ select ${addColumns}
+        from mes_work_produce_material_record a
+       INNER join mes_work_produce_task AS b on a.produce_task_id =b.id
+         INNER JOIN mes_unit c ON a.unit = c.id
+	 ${ew.customSqlSegment}
+  </select>
+
+</mapper>

@@ -1,0 +1,10 @@
+include:
+    - project: 'devops/cidevops-ci-service'
+      ref: master
+      file: 'templates/java-pipeline.yml'
+  
+  
+#variables:
+  #BUILD_SHELL: 'mvn clean package  -DskipTests'  
+  
+

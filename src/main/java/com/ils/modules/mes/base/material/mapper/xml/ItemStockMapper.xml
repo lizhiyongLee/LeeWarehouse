@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.material.mapper.ItemStockMapper">
+    <resultMap id="ItemStockResultMap" type="com.ils.modules.mes.base.material.entity.ItemStock">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="is_fifo" property="fifo" jdbcType="VARCHAR"/>
+        <result column="in_unit" property="inUnit" jdbcType="VARCHAR"/>
+        <result column="valid_time" property="validTime" jdbcType="INTEGER"/>
+        <result column="valid_unit" property="validUnit" jdbcType="VARCHAR"/>
+        <result column="warn_time" property="warnTime" jdbcType="INTEGER"/>
+        <result column="warn_unit" property="warnUnit" jdbcType="VARCHAR"/>
+        <result column="warehouse" property="warehouse" jdbcType="VARCHAR"/>
+        <result column="safety_stock" property="safetyStock" jdbcType="DECIMAL"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="valid_time_status" property="validTimeStatus" jdbcType="VARCHAR"/>
+        <result column="safety_status" property="safetyStatus" jdbcType="VARCHAR"/>
+        <result column="safety_warn_frequency" property="safetyWarnFrequency" jdbcType="INTEGER"/>
+        <result column="safety_warn_unit" property="safetyWarnUnit" jdbcType="VARCHAR"/>
+        <result column="item_manager_id" property="itemManagerId" jdbcType="VARCHAR"/>
+        <result column="item_manager" property="itemManager" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+     tenant_id , id , item_id , is_fifo , in_unit , valid_time , valid_unit , warn_time , warn_unit , warehouse , safety_stock , create_by , create_time , update_by , update_time , note , is_deleted  , valid_time_status , safety_status , safety_warn_frequency , safety_warn_unit , item_manager_id , item_manager
+  </sql>
+
+    <delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_item_stock 
+		WHERE
+			 item_id = #{id} 		
+	</delete>
+
+    <select id="selectByMainId" parameterType="java.lang.String" resultMap="ItemStockResultMap">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM mes_item_stock
+        WHERE
+        item_id = #{id}
+    </select>
+</mapper>

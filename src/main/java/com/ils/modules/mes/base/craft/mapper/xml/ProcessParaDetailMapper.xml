@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.craft.mapper.ProcessParaDetailMapper">
+    <resultMap id="ProcessParaDetailResultMap" type="com.ils.modules.mes.base.craft.entity.ProcessParaDetail">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="para_head_id" property="paraHeadId" jdbcType="VARCHAR"/>
+        <result column="process_id" property="processId" jdbcType="VARCHAR"/>
+        <result column="para_id" property="paraId" jdbcType="VARCHAR"/>
+        <result column="para_name" property="paraName" jdbcType="VARCHAR"/>
+        <result column="para_type" property="paraType" jdbcType="VARCHAR"/>
+        <result column="para_standard" property="paraStandard" jdbcType="VARCHAR"/>
+        <result column="min_value" property="minValue" jdbcType="DECIMAL"/>
+        <result column="max_value" property="maxValue" jdbcType="DECIMAL"/>
+        <result column="equal_value" property="equalValue" jdbcType="DECIMAL"/>
+        <result column="standard_value" property="standardValue" jdbcType="DECIMAL"/>
+        <result column="up_deviation" property="upDeviation" jdbcType="DECIMAL"/>
+        <result column="down_deviation" property="downDeviation" jdbcType="DECIMAL"/>
+        <result column="value_unit" property="valueUnit" jdbcType="VARCHAR"/>
+        <result column="switch_value" property="switchValue" jdbcType="VARCHAR"/>
+        <result column="option_value" property="optionValue" jdbcType="VARCHAR"/>
+        <result column="formula" property="formula" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+     tenant_id, id, para_head_id, process_id, para_id , para_name , para_type , para_standard , min_value, max_value, equal_value, standard_value, up_deviation, down_deviation, value_unit, switch_value, option_value, formula, note , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE
+		FROM  mes_process_para_detail
+		WHERE
+			 para_head_id = #{id}
+	</delete>
+
+    <select id="selectByMainId" parameterType="java.lang.String" resultMap="ProcessParaDetailResultMap">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM mes_process_para_detail
+        WHERE
+        para_head_id = #{id}
+    </select>
+</mapper>

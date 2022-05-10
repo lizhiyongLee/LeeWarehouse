@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.produce.mapper.WorkProcessTaskMapper">
+    <resultMap id="WorkProcessTaskResultMap"  type="com.ils.modules.mes.produce.entity.WorkProcessTask"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="spec" property="spec" jdbcType="VARCHAR" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+        <result column="seq" property="seq" jdbcType="INTEGER" />
+        <result column="prior_code" property="priorCode" jdbcType="VARCHAR" />
+        <result column="next_code" property="nextCode" jdbcType="VARCHAR" />
+        <result column="link_type" property="linkType" jdbcType="VARCHAR" />
+        <result column="plan_qty" property="planQty" jdbcType="DECIMAL" />
+        <result column="scheduled_qty" property="scheduledQty" jdbcType="DECIMAL" />
+        <result column="publish_qty" property="publishQty" jdbcType="DECIMAL" />
+        <result column="completed_qty" property="completedQty" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , order_id , order_no , batch_no , item_id , item_code , item_name , spec , process_id , process_name , process_code , seq ,  prior_code , next_code , link_type ,plan_qty , scheduled_qty , publish_qty , completed_qty , unit , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+   <resultMap id="WorkProcessTaskVOResultMap"  extends="WorkProcessTaskResultMap"   type="com.ils.modules.mes.produce.vo.WorkProcessTaskVO"> 
+    	<result column="sale_order_no" property="saleOrderNo" jdbcType="VARCHAR" />
+    	<result column="order_create_time" property="orderCreateTime" jdbcType="TIMESTAMP" />
+    	<result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP" />
+    	<result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP" />
+    	<result column="prior_code" property="priorCode" jdbcType="VARCHAR" />
+    	<result column="next_code" property="nextCode" jdbcType="VARCHAR" />
+    	<result column="status" property="status" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+     <resultMap id="AutoScheWorkProcessVOResultMap"  extends="WorkProcessTaskResultMap"   type="com.ils.modules.mes.produce.vo.AutoScheWorkProcessVO"> 
+		<result column="workflow_type" property="workflowType" jdbcType="VARCHAR" />
+    	<result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP" />
+    	<result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP" />
+    	<result column="route_id" property="routeId" jdbcType="VARCHAR" />
+        <result column="product_id" property="productId" jdbcType="VARCHAR" />
+    </resultMap>
+    
+  <insert id="insertBatch">
+    insert into mes_work_process_task ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.orderId ,jdbcType=VARCHAR }, #{item.orderNo ,jdbcType=VARCHAR }, #{item.batchNo ,jdbcType=VARCHAR }, #{item.itemId ,jdbcType=VARCHAR }, #{item.itemCode ,jdbcType=VARCHAR }, #{item.itemName ,jdbcType=VARCHAR }, #{item.spec ,jdbcType=VARCHAR }, #{item.processId ,jdbcType=VARCHAR }, #{item.processName ,jdbcType=VARCHAR }, #{item.processCode ,jdbcType=VARCHAR }, #{item.seq ,jdbcType=INTEGER }, #{item.planQty ,jdbcType=DECIMAL }, #{item.scheduledQty ,jdbcType=DECIMAL }, #{item.publishQty ,jdbcType=DECIMAL }, #{item.completedQty ,jdbcType=DECIMAL }, #{item.unit ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+  
+  <select id="listPage" resultMap="WorkProcessTaskVOResultMap">
+		select * from 
+		(SELECT b.*,a.sale_order_id as sale_order_no,a.status,a.create_time as order_create_time,
+		 a.plan_start_time,a.plan_end_time FROM  mes_work_order a  inner join mes_work_process_task b on a.id = b.order_id
+		 and b.is_deleted=0 and a.status !='6'
+			) c  ${ew.customSqlSegment}
+  </select>
+
+  <select id="listPageAll" resultMap="WorkProcessTaskVOResultMap">
+		select * from
+		(SELECT b.*,a.sale_order_id,a.status,a.create_time as order_create_time,
+		 a.plan_start_time,a.plan_end_time FROM  mes_work_order a  inner join mes_work_process_task b on a.id = b.order_id
+		 and b.is_deleted=0 and a.status !='6'
+			) c  ${ew.customSqlSegment}
+  </select>
+  
+   <select id="querySortWorkProcessTask" resultMap="AutoScheWorkProcessVOResultMap" >
+		SELECT b.*,a.route_id,a.product_id,a.workflow_type,
+		 a.plan_start_time,a.plan_end_time FROM  mes_work_order a  
+		 inner join mes_work_process_task b on a.id = b.order_id
+		 ${ew.customSqlSegment}
+  </select>
+
+    <select id="queryWorkProcessTaskVOByOrderId" resultMap="WorkProcessTaskVOResultMap" parameterType="java.lang.String" >
+		SELECT b.*,a.route_id,a.product_id,
+		 a.plan_start_time,a.plan_end_time FROM  mes_work_order a
+		 inner join mes_work_process_task b on a.id = b.order_id
+         AND order_id = #{orderId} AND b.is_deleted=0
+    </select>
+</mapper>

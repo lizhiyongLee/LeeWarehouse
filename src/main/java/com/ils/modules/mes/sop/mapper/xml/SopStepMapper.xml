@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.sop.mapper.SopStepMapper">
+    <resultMap id="SopStepResultMap"  type="com.ils.modules.mes.sop.entity.SopStep"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="related_task_type" property="relatedTaskType" jdbcType="VARCHAR" />
+        <result column="related_task_id" property="relatedTaskId" jdbcType="VARCHAR" />
+        <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+        <result column="step_seq" property="stepSeq" jdbcType="INTEGER" />
+        <result column="step_name" property="stepName" jdbcType="VARCHAR" />
+        <result column="step_display_name" property="stepDisplayName" jdbcType="VARCHAR" />
+        <result column="first_step" property="firstStep" jdbcType="VARCHAR" />
+        <result column="last_step" property="lastStep" jdbcType="VARCHAR" />
+        <result column="execute_authority" property="executeAuthority" jdbcType="VARCHAR" />
+        <result column="executer" property="executer" jdbcType="VARCHAR" />
+        <result column="next_step_id" property="nextStepId" jdbcType="VARCHAR" />
+        <result column="step_status" property="stepStatus" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , related_task_type , related_task_id , template_id , step_seq , step_name , step_display_name , first_step , last_step , execute_authority , executer , next_step_id , step_status , note , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <delete id="deleteByRelatedTaskId" parameterType="java.lang.String">
+        DELETE
+        FROM  mes_sop_step
+        WHERE
+            related_task_id = #{id}
+    </delete>
+
+</mapper>

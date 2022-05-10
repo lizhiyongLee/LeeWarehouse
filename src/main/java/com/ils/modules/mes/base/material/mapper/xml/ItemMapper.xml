@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.material.mapper.ItemMapper">
+    <resultMap id="ItemResultMap"  type="com.ils.modules.mes.base.material.entity.Item"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="item_description" property="itemDescription" jdbcType="VARCHAR" />
+        <result column="item_type_id" property="itemTypeId" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="main_unit" property="mainUnit" jdbcType="VARCHAR" />
+        <result column="main_accuracy" property="mainAccuracy" jdbcType="INTEGER" />
+        <result column="feed_unit" property="feedUnit" jdbcType="VARCHAR" />
+        <result column="output_unit" property="outputUnit" jdbcType="VARCHAR" />
+        <result column="spec" property="spec" jdbcType="VARCHAR" />
+        <result column="is_batch" property="batch" jdbcType="VARCHAR" />
+        <result column="is_qrcode" property="qrcode" jdbcType="VARCHAR" />
+        <result column="label_rule" property="labelRule" jdbcType="VARCHAR" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <sql id="base_column_list">
+     tenant_id , id , item_code , item_name , item_description , item_type_id , status , main_unit , main_accuracy , feed_unit , output_unit , spec , is_batch , is_qrcode , label_rule , attach , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  <select id="queryBussDataByItemId"  resultType="java.lang.Integer" >
+		  select count(*) from (
+			select 1 from mes_item_cell where is_deleted=0 and  item_id=#{itemId}
+			Union All
+			select 1 from mes_work_produce_material_record where is_deleted=0 and item_id=#{itemId}
+			Union All
+			select 1 from mes_work_produce_record where  is_deleted=0 and item_id=#{itemId}
+		)a
+  </select>
+
+   <select id="queryItemByCode"  parameterType="java.lang.String" resultMap="ItemResultMap" >
+		  select * from mes_item where  is_deleted=0 and item_code=#{itemCode}
+  </select>
+
+</mapper>

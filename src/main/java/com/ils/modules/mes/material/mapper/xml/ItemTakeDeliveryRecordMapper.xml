@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.material.mapper.ItemTakeDeliveryRecordMapper">
+    <resultMap id="ItemTakeDeliveryRecordResultMap"  type="com.ils.modules.mes.material.entity.ItemTakeDeliveryRecord"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="receive_type" property="receiveType" jdbcType="VARCHAR" />
+        <result column="item_cell_id" property="itemCellId" jdbcType="VARCHAR" />
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+        <result column="batch" property="batch" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="qty" property="qty" jdbcType="DECIMAL" />
+        <result column="unit_id" property="unitId" jdbcType="VARCHAR" />
+        <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+        <result column="storage_code" property="storageCode" jdbcType="VARCHAR" />
+        <result column="storage_name" property="storageName" jdbcType="VARCHAR" />
+        <result column="produce_date" property="produceDate" jdbcType="TIMESTAMP" />
+        <result column="valid_date" property="validDate" jdbcType="TIMESTAMP" />
+        <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
+        <result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+        <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+        <result column="supplier_batch" property="supplierBatch" jdbcType="VARCHAR" />
+        <result column="quality_status" property="qualityStatus" jdbcType="VARCHAR" />
+        <result column="reciept_id" property="recieptId" jdbcType="VARCHAR" />
+        <result column="reciept_code" property="recieptCode" jdbcType="VARCHAR" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , receive_type , item_cell_id , qrcode , batch , item_id , item_code , item_name , qty , unit_id , unit_name , storage_code , storage_name , produce_date , valid_date , supplier_id , supplier_code , supplier_name , supplier_batch , quality_status , reciept_id , reciept_code , attach , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  
+</mapper>

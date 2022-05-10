@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.machine.mapper.MachineRepairTaskMapper">
+    <resultMap id="MachineRepairTaskResultMap" type="com.ils.modules.mes.machine.entity.MachineRepairTask">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
+        <result column="task_code" property="taskCode" jdbcType="VARCHAR"/>
+        <result column="task_description" property="taskDescription" jdbcType="VARCHAR"/>
+        <result column="repair_machine_id" property="repairMachineId" jdbcType="VARCHAR"/>
+        <result column="fault_appearance" property="faultAppearance" jdbcType="VARCHAR"/>
+        <result column="fault_reason" property="faultReason" jdbcType="VARCHAR"/>
+        <result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP"/>
+        <result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP"/>
+        <result column="is_scan" property="scan" jdbcType="VARCHAR"/>
+        <result column="template_id" property="templateId" jdbcType="VARCHAR"/>
+        <result column="is_confirm" property="confirm" jdbcType="VARCHAR"/>
+        <result column="ahead_type" property="aheadType" jdbcType="VARCHAR"/>
+        <result column="real_excuter" property="realExcuter" jdbcType="VARCHAR"/>
+        <result column="excute_start_time" property="excuteStartTime" jdbcType="TIMESTAMP"/>
+        <result column="excute_end_time" property="excuteEndTime" jdbcType="TIMESTAMP"/>
+        <result column="acceptor" property="acceptor" jdbcType="VARCHAR"/>
+        <result column="attach" property="attach" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+    <resultMap id="RepairTaskDetailVOResultMap" extends="MachineRepairTaskResultMap"
+               type="com.ils.modules.mes.machine.vo.RepairTaskDetailVO">
+        <result column="machine_name" property="machineName" jdbcType="VARCHAR"/>
+        <result column="machine_code" property="machineCode" jdbcType="VARCHAR"/>
+        <result column="machine_type_id" property="machineTypeId" jdbcType="VARCHAR"/>
+        <result column="label_id" property="labelType" jdbcType="VARCHAR"/>
+        <result column="qr_code" property="qrcode" jdbcType="VARCHAR"/>
+        <result column="work_shop_id" property="workshopId" jdbcType="VARCHAR"/>
+        <result column="work_station_id" property="workStation" jdbcType="VARCHAR"/>
+        <result column="task_type" property="taskType" jdbcType="VARCHAR"/>
+        <result column="first_turn_on_date" property="firstTurnOnDate" jdbcType="TIMESTAMP"/>
+        <result column="employee_name" property="planExcuter" jdbcType="VARCHAR"/>
+        <result column="real_excuter_name" property="realExcuterName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="MachineRepairVOMap" extends="MachineRepairTaskResultMap"
+               type="com.ils.modules.mes.machine.vo.MachineRepairVO">
+        <result column="machine_name" property="machineName" jdbcType="VARCHAR"/>
+        <result column="machine_code" property="machineCode" jdbcType="VARCHAR"/>
+        <result column="type_name" property="machineTypeName" jdbcType="VARCHAR"/>
+        <result column="label_name" property="labelName" jdbcType="VARCHAR"/>
+        <result column="level_name" property="levelName" jdbcType="VARCHAR"/>
+        <result column="station_name" property="workStationName" jdbcType="VARCHAR"/>
+        <result column="employee_name" property="employeeName" jdbcType="VARCHAR"/>
+        <result column="shop_name" property="workShopName" jdbcType="VARCHAR"/>
+        <result column="real_excuter_name" property="realExcuterName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="DictModelMap" type="com.ils.common.system.vo.DictModel">
+        <result column="id" property="value" jdbcType="VARCHAR"/>
+        <result column="realname" property="text" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+     tenant_id , id , task_name , task_code , task_description , repair_machine_id , fault_appearance , fault_reason , planEndTime , planStartTime , is_scan , template_id , is_confirm , ahead_type , real_excuter , excute_start_time , excute_end_time , acceptor , attach , note , status , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <select id="listPage" resultMap="MachineRepairVOMap">
+        select
+            *
+        from
+            (
+            SELECT
+                a.*,
+                b.machine_name,
+                b.machine_code,
+                (
+                select
+                    type_name
+                from
+                    mes_machine_type
+                where
+                    id = b.machine_type_id) as type_name,
+                (
+                select
+                    shop_name
+                from
+                    mes_work_shop
+                where
+                    id = b.work_shop_id) as shop_name,
+                (
+                select
+                    machine_label_name
+                from
+                    mes_machine_label
+                where
+                    id = b.label_id) as label_name,
+                (
+                select
+                    machine_label_name
+                from
+                    mes_machine_label
+                where
+                    id = b.level_id) as level_name,
+                (
+                SELECT
+                    GROUP_CONCAT(employee_name)
+                FROM
+                    mes_machine_repair_task_employee
+                where
+                    is_deleted = 0
+                    and repair_task_id = a.id) AS employee_name,
+                (
+                select
+                    station_name
+                from
+                    mes_workstation
+                where
+                    equipment = b.id) as station_name,
+                (
+                select
+                    group_concat(b.realname)
+                from
+                    sys_user b
+                where
+                    concat(',', a.real_excuter, ',') like concat('%,', b.id, ',%')) as real_excuter_name
+            FROM
+                mes_machine_repair_task a
+            LEFT JOIN mes_machine b ON
+                a.repair_machine_id = b.id
+            WHERE
+                EXISTS(
+                SELECT
+                    1
+                FROM
+                    mes_machine_repair_task_employee b
+                WHERE
+                    b.repair_task_id = a.id
+                    AND b.is_deleted = 0
+                    AND b.employee_id = #{userId})
+                OR real_excuter like concat(concat('%', #{userId}), '%') ) rng ${ew.customSqlSegment}
+  </select>
+
+
+    <select id="queryRepairTaskDetailsByTaskId" parameterType="string" resultMap="RepairTaskDetailVOResultMap">
+        SELECT a.*, employee_name, b.machine_name, b.machine_type_id, b.machine_code
+            , b.qr_code, b.work_shop_id, b.label_id, '3' AS task_type, b.first_turn_on_date
+            , (
+                SELECT id
+                FROM mes_workstation
+                WHERE equipment = b.id
+                and is_deleted = 0
+            ) AS work_station_id, employee_name
+            , (
+                SELECT GROUP_CONCAT(b.realname)
+                FROM sys_user b
+                WHERE concat(',', a.real_excuter, ',') LIKE concat('%,', b.id, ',%')
+                and a.is_deleted =0
+            ) AS real_excuter_name
+        FROM mes_machine_repair_task a
+            LEFT JOIN mes_machine b ON a.repair_machine_id = b.id
+            LEFT JOIN (
+                SELECT repair_task_id, GROUP_CONCAT(employee_name) AS employee_name
+                FROM mes_machine_repair_task_employee
+                WHERE is_deleted = 0
+                GROUP BY repair_task_id
+            ) d
+            ON a.id = d.repair_task_id
+        WHERE a.id = #{taskId}
+    </select>
+
+    <select id="queryUserInfoWithNameAndId" resultMap="DictModelMap">
+        select id,realname from sys_user where is_deleted = 0
+    </select>
+    <select id="queryTemplateIdByMachineId" parameterType="string" resultType="string">
+        select (select template_id from mes_machine_type where id = machine_type_id) as template_id
+        from mes_machine where id = #{machineId}
+    </select>
+    <select id="queryRepairMachineTask" resultType="string" >
+        SELECT
+            repair_machine_id
+        FROM
+            mes_machine_repair_task mmrt
+            where status in(1,2,3)
+                and is_deleted = 0
+        group by
+            repair_machine_id
+    </select>
+</mapper>

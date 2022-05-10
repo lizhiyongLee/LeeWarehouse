@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.qc.mapper.QcMethodMapper">
+    <resultMap id="QcMethodResultMap" type="com.ils.modules.mes.base.qc.entity.QcMethod">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="method_name" property="methodName" jdbcType="VARCHAR"/>
+        <result column="is_auto" property="auto" jdbcType="VARCHAR"/>
+        <result column="qc_type" property="qcType" jdbcType="VARCHAR"/>
+        <result column="qc_way" property="qcWay" jdbcType="VARCHAR"/>
+        <result column="qc_qty" property="qcQty" jdbcType="DECIMAL"/>
+        <result column="record_way" property="recordWay" jdbcType="VARCHAR"/>
+        <result column="is_waste" property="waste" jdbcType="VARCHAR"/>
+        <result column="judge_type" property="judgeType" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="is_allow_null" property="allowNull" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+        tenant_id , id , method_name , is_auto , qc_type , qc_way , qc_qty , record_way , is_waste , judge_type , note , status , is_allow_null , create_by , create_time , update_by , update_time , is_deleted
+    </sql>
+
+
+    <select id="queryQcMeThodByItemIdAndQcType" resultMap="QcMethodResultMap">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM mes_qc_method a
+        WHERE
+        qc_type = #{qcType} and status = '1'
+        and EXISTS( SELECT 1 FROM mes_item_quality WHERE item_id = #{id} and quality_id = a.id)
+    </select>
+    <select id="queryByRouteLineId" parameterType="string" resultMap="QcMethodResultMap">
+        select a.*
+        from mes_qc_method a
+                 left join mes_route_line_method b on a.id = b.qc_method_id
+        where a.qc_type = #{qcType} and b.route_line_id = #{routeLineId}
+    </select>
+    <select id="queryByProductLineId" resultMap="QcMethodResultMap">
+        select a.*
+        from mes_qc_method a
+                left join mes_product_route_method b on a.id = b.qc_method_id
+        where a.qc_type = #{qcType} and b.product_line_id = #{productLineId}
+    </select>
+    <select id="queryByTaskId" resultMap="QcMethodResultMap">
+        select mqm.*
+        from mes_work_order_line_method mwolm
+                 left join mes_qc_method mqm on mwolm.qc_method_id = mqm.id
+        where work_order_line_id in (select mwol.id
+                                     from mes_work_order_line mwol,
+                                          (select mwo.id,
+                                                  mwpt.process_id,
+                                                  mwpt.seq,
+                                                  mwo.workflow_type,
+                                                  mwo.product_id,
+                                                  mwo.route_id
+                                           from mes_work_produce_task mwpt
+                                                    left join mes_work_order mwo on mwpt.order_id = mwo.id
+                                           where mwpt.id = #{taskId}) tb1
+                                     where mwol.process_id = tb1.process_id
+                                       and mwol.order_id = tb1.id
+                                       and mwol.seq = tb1.seq
+                                       and mwol.route_id = (if(tb1.workflow_type = '3', tb1.product_id, tb1.route_id))) and mwolm.qc_type = #{qcType}
+    </select>
+</mapper>

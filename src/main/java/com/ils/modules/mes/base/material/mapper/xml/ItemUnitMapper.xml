@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.material.mapper.ItemUnitMapper">
+     <resultMap id="ItemUnitResultMap"  type="com.ils.modules.mes.base.material.entity.ItemUnit"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="main_unit_qty" property="mainUnitQty" jdbcType="DECIMAL" />
+        <result column="main_unit" property="mainUnit" jdbcType="VARCHAR" />
+        <result column="convert_qty" property="convertQty" jdbcType="DECIMAL" />
+        <result column="convert_unit" property="convertUnit" jdbcType="VARCHAR" />
+        <result column="accuracy" property="accuracy" jdbcType="INTEGER" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+        <result column="seq" property="seq" jdbcType="INTEGER" />
+    </resultMap>
+    
+     <resultMap id="ConvertUnitResultMap"  type="com.ils.modules.mes.base.material.vo.ConvertUnitVO">      
+        <result column="convert_qty" property="convertQty" jdbcType="DECIMAL" />
+        <result column="convert_unit" property="convertUnit" jdbcType="VARCHAR" />
+        <result column="main_unit_qty" property="mainUnitQty" jdbcType="DECIMAL" />
+        <result column="main_unit" property="mainUnit" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <sql id="base_column_list">
+     tenant_id , id , item_id , main_unit_qty , main_unit , convert_qty , convert_unit , accuracy , note , create_by , create_time , update_by , update_time , is_deleted , seq, status
+  </sql>
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_item_unit 
+		WHERE
+			 item_id = #{id} 		
+	</delete>
+	
+	<select id="selectByMainId" parameterType="java.lang.String" resultMap="ItemUnitResultMap">
+		SELECT <include refid="base_column_list" />
+		FROM  mes_item_unit
+		WHERE
+			 item_id = #{id} 		
+	</select>
+	  
+	<select id="selectConvertUnit" parameterType="java.lang.String"  resultMap="ConvertUnitResultMap">
+	   select if(mes_item_unit.convert_unit is null,mes_item.main_unit,mes_item_unit.convert_unit) convert_unit ,
+		mes_item.main_unit,
+		if(mes_item_unit.main_unit_qty is null,1,mes_item_unit.main_unit_qty) main_unit_qty,
+		if(mes_item_unit.convert_qty is null,1,mes_item_unit.convert_qty) convert_qty
+		from mes_item left join mes_item_unit on mes_item.id =  mes_item_unit.item_id and mes_item_unit.convert_unit=#{unit} and mes_item_unit.status != 0
+		where mes_item.id = #{itemId}
+	</select>
+	
+</mapper>

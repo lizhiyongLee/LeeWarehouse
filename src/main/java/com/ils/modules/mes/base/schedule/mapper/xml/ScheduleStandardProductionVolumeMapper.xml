@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.schedule.mapper.ScheduleStandardProductionVolumeMapper">
+    <resultMap id="ScheduleStandardProductionVolumeResultMap"  type="com.ils.modules.mes.base.schedule.entity.ScheduleStandardProductionVolume"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+          <result column="standard_code" property="standardCode" jdbcType="VARCHAR" />
+        <result column="standard_type" property="standardType" jdbcType="VARCHAR" />
+        <result column="product_bom_id" property="productBomId" jdbcType="VARCHAR" />
+        <result column="route_id" property="routeId" jdbcType="VARCHAR" />
+        <result column="process_extend_id" property="processExtendId" jdbcType="VARCHAR" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="process_seq" property="processSeq" jdbcType="INTEGER" />
+        <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+        <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="volume_type" property="volumeType" jdbcType="VARCHAR" />
+        <result column="time_unit" property="timeUnit" jdbcType="VARCHAR" />
+        <result column="time_period" property="timePeriod" jdbcType="DECIMAL" />
+        <result column="qty" property="qty" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id ,standard_code, standard_type , product_bom_id , route_id ,process_extend_id, process_id , process_code , process_name , process_seq , station_id , station_code , station_name , item_id , item_code , item_name , volume_type , time_unit , time_period , qty , unit , status , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  <insert id="insertBatch">
+    insert into mes_schedule_standard_production_volume ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR },#{item.standardCode ,jdbcType=VARCHAR }, #{item.standardType ,jdbcType=VARCHAR }, #{item.productBomId ,jdbcType=VARCHAR }, #{item.routeId ,jdbcType=VARCHAR }, #{item.processExtendId ,jdbcType=VARCHAR }, #{item.processId ,jdbcType=VARCHAR }, #{item.processCode ,jdbcType=VARCHAR }, #{item.processName ,jdbcType=VARCHAR }, #{item.processSeq ,jdbcType=INTEGER }, #{item.stationId ,jdbcType=VARCHAR }, #{item.stationCode ,jdbcType=VARCHAR }, #{item.stationName ,jdbcType=VARCHAR }, #{item.itemId ,jdbcType=VARCHAR }, #{item.itemCode ,jdbcType=VARCHAR }, #{item.itemName ,jdbcType=VARCHAR }, #{item.volumeType ,jdbcType=VARCHAR }, #{item.timeUnit ,jdbcType=VARCHAR }, #{item.timePeriod ,jdbcType=DECIMAL }, #{item.qty ,jdbcType=DECIMAL }, #{item.unit ,jdbcType=VARCHAR }, #{item.status ,jdbcType=VARCHAR }, #{item.note ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+</mapper>

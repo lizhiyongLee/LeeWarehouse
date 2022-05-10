@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.machine.mapper.MachineParaDetailMapper">
+    <resultMap id="MachineParaDetailResultMap"  type="com.ils.modules.mes.machine.entity.MachineParaDetail"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="para_head_id" property="paraHeadId" jdbcType="VARCHAR" />
+        <result column="machine_id" property="machineId" jdbcType="VARCHAR" />
+        <result column="para_id" property="paraId" jdbcType="VARCHAR" />
+        <result column="para_name" property="paraName" jdbcType="VARCHAR" />
+        <result column="para_type" property="paraType" jdbcType="VARCHAR" />
+        <result column="para_standard" property="paraStandard" jdbcType="VARCHAR" />
+        <result column="min_value" property="minValue" jdbcType="DECIMAL" />
+        <result column="max_value" property="maxValue" jdbcType="DECIMAL" />
+        <result column="equal_value" property="equalValue" jdbcType="DECIMAL" />
+        <result column="standard_value" property="standardValue" jdbcType="DECIMAL" />
+        <result column="up_deviation" property="upDeviation" jdbcType="DECIMAL" />
+        <result column="down_deviation" property="downDeviation" jdbcType="DECIMAL" />
+        <result column="value_unit" property="valueUnit" jdbcType="VARCHAR" />
+        <result column="switch_value" property="switchValue" jdbcType="VARCHAR" />
+        <result column="option_value" property="optionValue" jdbcType="VARCHAR" />
+        <result column="formula" property="formula" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , para_head_id , machine_id , para_id , para_name , para_type , para_standard , min_value , max_value , equal_value , standard_value , up_deviation , down_deviation , value_unit , switch_value , option_value , formula , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  <insert id="insertBatch">
+    insert into mes_machine_para_detail ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.paraHeadId ,jdbcType=VARCHAR }, #{item.machineId ,jdbcType=VARCHAR }, #{item.paraId ,jdbcType=VARCHAR }, #{item.paraName ,jdbcType=VARCHAR }, #{item.paraType ,jdbcType=VARCHAR }, #{item.paraStandard ,jdbcType=VARCHAR }, #{item.minValue ,jdbcType=DECIMAL }, #{item.maxValue ,jdbcType=DECIMAL }, #{item.equalValue ,jdbcType=DECIMAL }, #{item.standardValue ,jdbcType=DECIMAL }, #{item.upDeviation ,jdbcType=DECIMAL }, #{item.downDeviation ,jdbcType=DECIMAL }, #{item.valueUnit ,jdbcType=VARCHAR }, #{item.switchValue ,jdbcType=VARCHAR }, #{item.optionValue ,jdbcType=VARCHAR }, #{item.formula ,jdbcType=TEXT }, #{item.note ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+
+    <delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE
+		FROM  mes_machine_para_detail
+		WHERE
+			 para_head_id = #{id}
+	</delete>
+</mapper>

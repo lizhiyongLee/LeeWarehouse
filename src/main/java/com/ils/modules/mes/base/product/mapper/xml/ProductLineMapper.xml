@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.product.mapper.ProductLineMapper">
+     <resultMap id="ProductLineResultMap"  type="com.ils.modules.mes.base.product.entity.ProductLine"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="product_id" property="productId" jdbcType="VARCHAR" />
+        <result column="route_id" property="routeId" jdbcType="VARCHAR" />
+        <result column="seq" property="seq" jdbcType="INTEGER" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="prior_code" property="priorCode" jdbcType="VARCHAR" />
+        <result column="next_code" property="nextCode" jdbcType="VARCHAR" />
+        <result column="link_type" property="linkType" jdbcType="VARCHAR" />
+        <result column="in_unit" property="inUnit" jdbcType="VARCHAR" />
+        <result column="out_unit" property="outUnit" jdbcType="VARCHAR" />
+        <result column="in_qty" property="inQty" jdbcType="DECIMAL" />
+        <result column="out_qty" property="outQty" jdbcType="DECIMAL" />
+        <result column="machine_qty" property="machineQty" jdbcType="TINYINT" />
+        <result column="wait_time" property="waitTime" jdbcType="DECIMAL" />
+        <result column="setup_time" property="setupTime" jdbcType="DECIMAL" />
+        <result column="setup_time_unit" property="setupTimeUnit" jdbcType="VARCHAR" />
+        <result column="process_time" property="processTime" jdbcType="DECIMAL" />
+        <result column="machine_time" property="machineTime" jdbcType="DECIMAL" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <resultMap id="ProductLineBomVOResultMap"  type="com.ils.modules.mes.base.product.vo.ProductLineBomVO">    
+        <result column="product_id" property="productId" jdbcType="VARCHAR" />
+        <result column="product_line_id" property="productLineId" jdbcType="VARCHAR" />
+        <result column="seq" property="seq" jdbcType="INTEGER" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="qty" property="qty" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="loss_rate" property="lossRate" jdbcType="DECIMAL" />
+        <result column="is_control" property="control" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />  
+   		<result column="main_unit_qty" property="mainUnitQty" jdbcType="DECIMAL" />
+        <result column="main_unit" property="mainUnit" jdbcType="VARCHAR" />
+         <result column="convert_qty" property="convertQty" jdbcType="DECIMAL" />
+        <result column="convert_unit" property="convertUnit" jdbcType="VARCHAR" />
+    </resultMap>
+    
+     <resultMap id="ProductLineVOResultMap" extends="ProductLineResultMap"  type="com.ils.modules.mes.base.product.vo.ProductLineVO"> 
+    </resultMap>
+    
+    <sql id="base_column_list">
+     tenant_id , id , product_id , route_id , seq , process_id , process_code , process_name , prior_code , next_code , link_type , in_unit , out_unit , in_qty , out_qty , machine_qty , wait_time , setup_time ,setup_time_unit, process_time , machine_time , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+	<delete id="deleteByProductId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_product_line 
+		WHERE
+			 product_id = #{id} 		
+	</delete>
+	
+	<select id="selectByProductId" parameterType="java.lang.String" resultMap="ProductLineVOResultMap">
+		SELECT <include refid="base_column_list" />
+		FROM  mes_product_line
+		WHERE
+			 product_id = #{id} 		
+	</select>
+	
+	<select id="queryProductLineBomById" parameterType="java.lang.String" resultMap="ProductLineBomVOResultMap">
+		SELECT a.product_id,a.id product_line_id,a.seq,a.process_id,a.process_name,a.process_code,
+					b.item_id,b.item_code,b.item_name,b.qty,b.unit,b.loss_rate,b.is_control,b.note,
+			        ifnull(e.main_unit_qty,1) as main_unit_qty,
+					ifnull(e.main_unit,d.main_unit) as main_unit,
+					ifnull(e.convert_qty,1) as convert_qty  ,
+					ifnull(e.convert_unit,d.main_unit) as convert_unit
+			        FROM   mes_product_line a inner join  mes_product_bom b on a.id =b.product_line_id
+			        left join mes_unit c on b.unit=c.id 
+			        inner join mes_item d on b.item_id =d.id 
+			        left join mes_item_unit e  on b.item_id =e.item_id and b.unit = e.convert_unit 
+		where a.product_id = #{id} order by a.seq asc 			
+	</select>
+</mapper>

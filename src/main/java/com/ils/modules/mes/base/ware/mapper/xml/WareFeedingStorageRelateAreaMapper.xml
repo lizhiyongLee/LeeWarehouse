@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.ware.mapper.WareFeedingStorageRelateAreaMapper">
+    <resultMap id="WareFeedingStorageRelateAreaResultMap"  type="com.ils.modules.mes.base.ware.entity.WareFeedingStorageRelateArea"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="area_id" property="areaId" jdbcType="VARCHAR" />
+        <result column="feeding_storage" property="feedingStorage" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="RelatedStorageVOResultMap" type="com.ils.modules.mes.base.ware.vo.RelatedStorageVO">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="work_shop_id" property="workshopId" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="parent_id" property="upArea" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="has_warehouse" property="hasWarehouse" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="RelatedVOResultMap" type="com.ils.modules.mes.base.ware.vo.RelatedVO">
+        <result column="storage_name" property="name" jdbcType="VARCHAR"/>
+        <result column="feeding_storage" property="storageId" jdbcType="VARCHAR"/>
+        <result column="area_id" property="areaId" jdbcType="VARCHAR"/>
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , area_id , feeding_storage , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+    <delete id="delByAreaId">
+        delete from mes_ware_feeding_storage_relate_area where area_id = #{areaId}
+    </delete>
+
+    <select id="selectFeedingStorageByAreaId" parameterType="string" resultMap="WareFeedingStorageRelateAreaResultMap" >
+		select b.* from (select
+                   tenant_id as  tenant_id,
+                   id,
+                   '' as up_area,
+                   factory_code as code,
+                   factory_name as name,
+                   '1' as node_type,
+                   '' as duty_person_name,
+                   status ,
+                   '' as qrcode,
+                   note
+               from mes_factory where is_deleted=0
+               union
+               select
+                   tenant_id as  tenant_id,
+                   id,
+                   up_area as up_area,
+                   shop_code as code,
+                   shop_name as name,
+                   '2' as node_type,
+                   duty_person_name as duty_person_name,
+                   status ,
+                   qrcode,
+                   note
+               from
+                   mes_work_shop where is_deleted=0
+               union
+               select
+                   tenant_id as  tenant_id,
+                   id,
+                   up_area as up_area,
+                   line_code as code,
+                   line_name as name,
+                   '3' as node_type,
+                   duty_person_name as duty_person_name,
+                   status ,
+                   qrcode,
+                   note
+               from
+                   mes_work_line where is_deleted=0
+               union
+               select
+                   tenant_id as  tenant_id,
+                   id,
+                   up_area as up_area,
+                   station_code as code,
+                   station_name as name,
+                   '4' as node_type,
+                   duty_person_name as duty_person_name,
+                   status ,
+                   qrcode,
+                   note
+               from
+                   mes_workstation where is_deleted=0) a left join
+              mes_ware_feeding_storage_relate_area b on a.id = b.area_id where a.id = #{id,jdbcType=VARCHAR}
+	</select>
+
+    <select id="selectFeedingStoragesByAreaId" parameterType="string" resultMap="RelatedVOResultMap">
+        select
+            feeding_storage,
+            area_id,
+            (select storage_name from mes_ware_storage b2 where b2.id = f1.feeding_storage and is_deleted = 0) as storage_name
+        from
+            mes_ware_feeding_storage_relate_area f1 where is_deleted = '0'
+    </select>
+    <select id="selectRelatedStorageVO" resultMap="RelatedStorageVOResultMap">
+        select tenant_id,id,work_shop_id,type,status,code,parent_id,name,has_warehouse
+        from (select tenant_id as tenant_id,
+                     id,
+                     '' as work_shop_id,
+                     0 as type,
+                     status,
+                     '-1' as parent_id,
+                     factory_code as code,
+                     factory_name as name,
+                     false as has_warehouse
+              from mes_factory
+              union
+              select tenant_id as tenant_id,
+                     id,
+                     id as work_shop_id,
+                     1 as type,
+                     status,
+                     up_area as parent_id,
+                     shop_code as code,
+                     shop_name as name,
+                     if((select count(1) from mes_ware_house where work_shop_id = mes_work_shop.id),true,false) as has_warehouse
+              from mes_work_shop
+              union
+             select tenant_id as tenant_id,
+                    id,
+                    '' as work_shop_id,
+                    2 as type,
+                    status,
+                    up_area as parent_id,
+                    line_code as code,
+                    line_name as name,
+                    false as has_warehouse
+             from mes_work_line
+              union
+              select tenant_id as tenant_id,
+                     id,
+                     '' as work_shop_id,
+                     3 as type,
+                     status,
+                     up_area as parent_id,
+                     station_code as code,
+                     station_name as name,
+                     false as has_warehouse
+              from mes_workstation
+            ) union_table ${ew.customSqlSegment};
+    </select>
+
+
+</mapper>

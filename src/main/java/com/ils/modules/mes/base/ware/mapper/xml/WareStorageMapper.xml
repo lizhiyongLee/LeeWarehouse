@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.ware.mapper.WareStorageMapper">
+    <resultMap id="WareStorageResultMap"  type="com.ils.modules.mes.base.ware.entity.WareStorage"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="storage_type" property="storageType" jdbcType="VARCHAR" />
+        <result column="storage_code" property="storageCode" jdbcType="VARCHAR" />
+        <result column="storage_name" property="storageName" jdbcType="VARCHAR" />
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+        <result column="is_qccontrol" property="qccontrol" jdbcType="VARCHAR" />
+        <result column="qc_status" property="qcStatus" jdbcType="VARCHAR" />
+        <result column="up_storage_type" property="upStorageType" jdbcType="VARCHAR" />
+        <result column="up_storage_code" property="upStorageCode" jdbcType="VARCHAR" />
+        <result column="up_storage_name" property="upStorageName" jdbcType="VARCHAR" />
+        <result column="up_storage_id" property="upStorageId" jdbcType="VARCHAR" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+
+    <resultMap id="WareStorageTreeResultMap"  type="com.ils.modules.mes.base.ware.vo.WareStorageTreeVO">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="up_area" property="upArea" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="node_type" property="nodeType" jdbcType="VARCHAR" />
+        <result column="work_shop_id" property="workShopId" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+    <resultMap id="ProduceWareStorageVOResultMap"  type="com.ils.modules.mes.base.ware.vo.ProduceWareStorageVO">
+    	<result column="storage_id" property="storageId" jdbcType="VARCHAR" />
+        <result column="storage_code" property="storageCode" jdbcType="VARCHAR" />
+        <result column="storage_name" property="storageName" jdbcType="VARCHAR" />
+    	<result column="qualified_qty" property="qualifiedQty" jdbcType="DECIMAL" />
+    	<result column="wait_qty" property="waitQty" jdbcType="DECIMAL" />
+    	<result column="item_id" property="itemId" jdbcType="VARCHAR" />
+    	<result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+    	<result column="unit_id" property="unit" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="WareStorageVOResultMap"  type="com.ils.modules.mes.base.ware.vo.WareStorageVO">
+        <result column="has_child" property="hasChild" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="storage_type" property="storageType" jdbcType="VARCHAR" />
+        <result column="storage_code" property="storageCode" jdbcType="VARCHAR" />
+        <result column="storage_name" property="storageName" jdbcType="VARCHAR" />
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="WareStorageVOResultMap1" type="com.ils.modules.mes.base.ware.vo.WareStorageVO" extends="WareStorageResultMap">
+        <result column="has_child" property="hasChild" jdbcType="VARCHAR" />
+    </resultMap>
+    
+
+   <sql id="base_column_list">
+     tenant_id , id , storage_type , storage_code , storage_name , qrcode , is_qccontrol , qc_status , up_storage_type , up_storage_code , up_storage_name , up_storage_id , attach , note , status , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+  
+
+    <select id="selectByUpStorageId" parameterType="java.lang.String" resultMap="WareStorageVOResultMap1">
+        select <include refid="base_column_list"></include>, if((select count(1) from mes_ware_storage mws2 where mws1.id = mws2.up_storage_id) > 0, '1', '0') as has_child
+        from mes_ware_storage mws1
+        where up_storage_id = #{upstorageId}
+    </select>
+
+
+    <select id="selectStorageByWorkShopIdTreeVO" parameterType="java.lang.String" resultMap="WareStorageTreeResultMap">
+        SELECT c.work_shop_id, c.id, c.code, c.name, c.node_type
+             , c.up_area, c.tenant_id, c.qrcode, c.status, c.note
+        FROM (
+                 SELECT mes_ware_house.tenant_id AS tenant_id, mes_ware_house.id AS id, '' AS up_area, house_code AS code, house_name AS name
+                      , '1' AS node_type, work_shop_id, mes_ware_house.qrcode AS qrcode, mes_ware_house.status AS status, mes_ware_house.note AS note
+                 FROM mes_ware_house
+                          LEFT JOIN mes_work_shop ON mes_ware_house.work_shop_id = mes_work_shop.id
+                 WHERE mes_ware_house.is_deleted = 0
+                 UNION
+                 SELECT mes_ware_storage.tenant_id AS tenant_id, mes_ware_storage.id AS id, up_storage_id AS up_area, storage_code AS code, storage_name AS name
+                      , '2' AS node_type, work_shop_id, mes_ware_storage.qrcode AS qrcode, mes_ware_storage.status AS status, mes_ware_storage.note AS note
+                 FROM mes_ware_storage
+                          LEFT JOIN mes_ware_house ON mes_ware_storage.up_storage_id = mes_ware_house.id
+                          LEFT JOIN mes_work_shop ON mes_ware_house.work_shop_id = mes_work_shop.id
+                 WHERE storage_type = '1'
+                   AND mes_ware_storage.is_deleted = 0
+                 UNION
+                 SELECT a.tenant_id AS tenant_id, a.id AS id, a.up_storage_id AS up_area, a.storage_code AS code, a.storage_name AS name
+                      , '3' AS node_type, work_shop_id, a.qrcode AS qrcode, a.status AS status, a.note AS note
+                 FROM mes_ware_storage a
+                          LEFT JOIN (
+                     SELECT mes_ware_storage.*, work_shop_id
+                     FROM mes_ware_storage
+                              LEFT JOIN mes_ware_house ON mes_ware_storage.up_storage_id
+                              LEFT JOIN mes_work_shop ON mes_ware_house.work_shop_id = mes_work_shop.id
+                     WHERE storage_type = '1'
+                 ) b
+                                    ON a.up_storage_id = b.id
+                 WHERE a.storage_type = '2'
+                   AND a.is_deleted = 0
+             ) c where c.work_shop_id = #{workShopId}
+    </select>
+
+    <select id="selectStorageByStationId"  resultMap="ProduceWareStorageVOResultMap">
+        SELECT a.id AS storage_id, a.storage_code, a.storage_name,c.item_id,c.unit_id,c.unit_name , SUM(CASE c.qc_status
+                                                                           WHEN '1' THEN ifnull(c.qty, 0)
+                                                                           ELSE 0
+            END) AS qualified_qty
+             , SUM(CASE c.qc_status
+                       WHEN '2' THEN ifnull(c.qty, 0)
+                       ELSE 0
+            END) AS wait_qty
+        FROM mes_ware_storage a
+                 INNER JOIN (
+            SELECT a.feeding_storage
+            FROM mes_ware_feeding_storage_relate_area a
+                     INNER JOIN (
+                SELECT f.id AS area_id
+                FROM mes_workstation e
+                         INNER JOIN mes_work_line f ON e.up_area = f.id
+                WHERE e.id = #{areaId}
+                UNION
+                SELECT h.id AS area_id
+                FROM mes_workstation e
+                         INNER JOIN mes_work_line f ON e.up_area = f.id
+                         INNER JOIN mes_work_shop h ON f.up_area = h.id
+                WHERE e.id = #{areaId}
+                UNION
+                SELECT f.id AS area_id
+                FROM mes_workstation e
+                         INNER JOIN mes_work_shop f ON e.up_area = f.id
+                WHERE e.id = #{areaId}
+                UNION
+                SELECT id AS area_id
+                FROM mes_workstation
+                WHERE id = #{areaId}
+            ) g
+                                ON g.area_id = a.area_id
+            WHERE a.is_deleted = 0
+            GROUP BY a.feeding_storage
+        ) b
+                            ON a.id = b.feeding_storage
+                 INNER JOIN mes_item_cell c
+                            ON c.storage_id = b.feeding_storage
+                                AND c.item_id = #{itemId}
+                                AND c.qc_status IN ('1', '2')
+        WHERE a.is_deleted = 0
+          AND a.status = '1'
+          AND c.qty > 0
+        GROUP BY a.id, a.storage_code, a.storage_name,c.item_id,c.unit_id,c.unit_name
+    </select>
+
+    <select id="queryWareHouseList" resultMap="WareStorageVOResultMap" >
+        select
+            a.tenant_id as tenant_id,
+            a.id as id,
+            a.type  as storage_type ,
+            a.attach as attach,
+            a.house_code as storage_code,
+            a.house_name as storage_name,
+            a.note as note,
+            a.qrcode as qrcode,
+            a.status as status,
+            a.create_by as create_by,
+            a.create_time as create_time,
+            a.update_by as update_by,
+            a.update_time as update_time,
+            a.is_deleted as is_deleted,
+            case when (
+                          count(*)
+                          )> 0 then 1 else 0 end as has_child
+        from
+            mes_ware_house a
+                left join mes_ware_storage b on a.id = b.up_storage_id
+        group by
+            a.id
+    </select>
+    
+    <select id="queryWareHouseCount"  resultType="java.lang.Integer">
+    		SELECT count(1)
+            FROM mes_ware_feeding_storage_relate_area a
+                     INNER JOIN (
+                SELECT f.id AS area_id
+                FROM mes_workstation e
+                         INNER JOIN mes_work_line f ON e.up_area = f.id
+                WHERE e.id = #{areaId}
+                UNION
+                SELECT h.id AS area_id
+                FROM mes_workstation e
+                         INNER JOIN mes_work_line f ON e.up_area = f.id
+                         INNER JOIN mes_work_shop h ON f.up_area = h.id
+                WHERE e.id =#{areaId}
+                UNION
+                SELECT f.id AS area_id
+                FROM mes_workstation e
+                         INNER JOIN mes_work_shop f ON e.up_area = f.id
+                WHERE e.id =#{areaId}
+                UNION
+                SELECT id AS area_id
+                FROM mes_workstation
+                WHERE id =#{areaId}
+                )g on a.area_id = g.area_id
+                where a.is_deleted=0
+		       <if test = " storageId != null and storageId != '' ">	
+		         and feeding_storage = #{storageId}
+		       </if>
+    </select>
+    <select id="queryReceivingGoodsTreeStorage" parameterType="java.lang.String" resultMap="WareStorageTreeResultMap">
+       select * from ( SELECT mes_ware_house.tenant_id AS tenant_id, mes_ware_house.id AS id, '' AS up_area, house_code AS code, house_name AS name
+             , '1' AS node_type, qrcode, status, note, create_by, create_time, update_by, update_time
+        FROM mes_ware_house
+        WHERE mes_ware_house.is_deleted = 0
+        UNION
+        SELECT mes_ware_storage.tenant_id AS tenant_id, mes_ware_storage.id AS id, up_storage_id AS up_area, storage_code AS code, storage_name AS name
+             , '2' AS node_type, qrcode, status, note, create_by, create_time, update_by, update_time
+        FROM mes_ware_storage
+        WHERE storage_type = '1'
+          AND mes_ware_storage.is_deleted = 0
+        UNION
+        SELECT a.tenant_id AS tenant_id, a.id AS id, a.up_storage_id AS up_area, a.storage_code AS code, a.storage_name AS name
+             , '3' AS node_type, qrcode, status, note, create_by, create_time, update_by, update_time
+        FROM mes_ware_storage a
+        WHERE a.storage_type = '2'
+          AND a.is_deleted = 0) b
+          ${ew.customSqlSegment}
+    </select>
+
+
+    <select id="selectStorageTreeList" resultMap="WareStorageResultMap">
+        select id, storage_name, storage_code, up_storage_id, '2' as storage_type
+        from mes_ware_storage mws
+        where storage_type = '1'
+        union
+        select id, house_name as storage_name, house_code as storage_code, '-1' as up_storage_id, '1' as storage_type
+        from mes_ware_house
+    </select>
+</mapper>

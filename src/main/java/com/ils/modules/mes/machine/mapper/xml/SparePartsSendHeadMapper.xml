@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.machine.mapper.SparePartsSendHeadMapper">
+    <resultMap id="SparePartsSendHeadResultMap"  type="com.ils.modules.mes.machine.entity.SparePartsSendHead"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="send_code" property="sendCode" jdbcType="VARCHAR" />
+        <result column="send_type" property="sendType" jdbcType="VARCHAR" />
+        <result column="out_storage_code" property="outStorageCode" jdbcType="VARCHAR" />
+        <result column="out_storage_name" property="outStorageName" jdbcType="VARCHAR" />
+        <result column="out_date" property="outDate" jdbcType="DATE" />
+        <result column="employee" property="employee" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , send_code , send_type , out_storage_code , out_storage_name , out_date , employee , note , status , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  <insert id="insertBatch">
+    insert into mes_spare_parts_send_head ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.sendCode ,jdbcType=VARCHAR }, #{item.sendType ,jdbcType=VARCHAR }, #{item.outStorageCode ,jdbcType=VARCHAR }, #{item.outStorageName ,jdbcType=VARCHAR }, #{item.outDate ,jdbcType=DATE }, #{item.employee ,jdbcType=VARCHAR }, #{item.note ,jdbcType=VARCHAR }, #{item.status ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+</mapper>

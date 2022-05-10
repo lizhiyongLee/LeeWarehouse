@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.factory.mapper.WorkCalendarMapper">
+    <resultMap id="WorkCalendarResultMap" type="com.ils.modules.mes.base.factory.entity.WorkCalendar">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="workdate" property="workdate" jdbcType="DATE"/>
+        <result column="date_type" property="dateType" jdbcType="VARCHAR"/>
+        <result column="shift_id" property="shiftId" jdbcType="VARCHAR"/>
+        <result column="station_id" property="stationId" jdbcType="VARCHAR"/>
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR"/>
+        <result column="station_name" property="stationName" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <resultMap id="WorkCalendarVOResultMap" extends="WorkCalendarResultMap"
+               type="com.ils.modules.mes.base.factory.vo.WorkCalendarVO">
+        <result column="shift_name" property="shiftName" jdbcType="VARCHAR"/>
+        <result column="shift_start_time" property="shiftStartTime" jdbcType="VARCHAR"/>
+        <result column="shift_end_time" property="shiftEndTime" jdbcType="VARCHAR"/>
+        <result column="shift_note" property="shiftNote" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="WorkCalendarParamsVOMap" type="com.ils.modules.mes.base.factory.vo.WorkCalendarParamsVO">
+        <result column="date_type" property="dateType" jdbcType="VARCHAR"/>
+        <result column="shiftIds" property="shiftIds" jdbcType="VARCHAR"/>
+        <result column="stationIds" property="stationIds" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+        tenant_id
+        , id , type , workdate , date_type , shift_id ,station_id,station_code,station_name, note , create_by , create_time , update_by , update_time , is_deleted
+    </sql>
+
+    <insert id="insertBatch">
+        insert into mes_work_calendar (
+        <include refid="base_column_list"/>
+        ) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.type ,jdbcType=VARCHAR },
+            #{item.workdate ,jdbcType=DATE }, #{item.dateType ,jdbcType=VARCHAR }, #{item.shiftId ,jdbcType=VARCHAR },
+            #{item.stationId ,jdbcType=VARCHAR }, #{item.stationCode ,jdbcType=VARCHAR },
+            #{item.stationName ,jdbcType=VARCHAR }, #{item.note ,jdbcType=VARCHAR },
+            #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP },
+            #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP },
+            #{item.deleted ,jdbcType=TINYINT })
+        </foreach>
+    </insert>
+
+    <select id="queryWorkCalendarList" parameterType="java.lang.String" resultMap="WorkCalendarVOResultMap">
+        select a.*,
+               b.shift_name,
+               b.shift_start_time,
+               b.shift_end_time,
+               b.note
+        from mes_work_calendar a
+                 left join mes_shift b on a.shift_id = b.id
+            ${ew.customSqlSegment}
+    </select>
+
+    <select id="querySingleInitData" resultMap="WorkCalendarParamsVOMap">
+        SELECT date_type,
+               GROUP_CONCAT(distinct shift_id)   AS shiftIds,
+               GROUP_CONCAT(distinct station_id) AS stationIds
+        from mes_work_calendar ${ew.customSqlSegment}
+        group by date_type, workdate
+    </select>
+
+    <select id="getMinStartDateTimeDualWorkDate" resultType="java.lang.String">
+        select min(ms.shift_start_time)
+        from mes_work_calendar mwc
+                 left join mes_shift ms on ms.id = mwc.shift_id
+        where mwc.is_deleted = 0
+          and mwc.type = #{type}
+          and mwc.station_id = #{stationId}
+          and mwc.workdate = #{workDate}
+        order by mwc.workdate asc, ms.shift_start_time asc, ms.shift_end_time asc
+    </select>
+
+</mapper>

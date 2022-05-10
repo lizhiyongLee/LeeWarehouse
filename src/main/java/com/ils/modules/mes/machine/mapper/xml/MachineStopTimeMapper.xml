@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.machine.mapper.MachineStopTimeMapper">
+    <resultMap id="MachineStopTimeResultMap"  type="com.ils.modules.mes.machine.entity.MachineStopTime"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="machine_id" property="machineId" jdbcType="VARCHAR" />
+        <result column="stop_type" property="stopType" jdbcType="VARCHAR" />
+        <result column="stop_reason_id" property="stopReasonId" jdbcType="VARCHAR" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , machine_id , stop_type , stop_reason_id , start_time , end_time , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+    <select id="selectByMainId" parameterType="java.lang.String" resultMap="MachineStopTimeResultMap">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM mes_machine_stop_time
+        WHERE
+        machine_id = #{id}
+    </select>
+
+</mapper>

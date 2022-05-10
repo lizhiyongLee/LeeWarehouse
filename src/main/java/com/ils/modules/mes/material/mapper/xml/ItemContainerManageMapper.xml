@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.material.mapper.ItemContainerManageMapper">
+    <resultMap id="ItemContainerManageResultMap"  type="com.ils.modules.mes.material.entity.ItemContainerManage">
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="container_id" property="containerId" jdbcType="VARCHAR" />
+        <result column="container_code" property="containerCode" jdbcType="VARCHAR" />
+        <result column="container_qrcode" property="containerQrcode" jdbcType="VARCHAR" />
+        <result column="container_name" property="containerName" jdbcType="VARCHAR" />
+        <result column="father_qrcode" property="fatherQrcode" jdbcType="VARCHAR" />
+        <result column="storage_id" property="storageId" jdbcType="VARCHAR" />
+        <result column="storage_code" property="storageCode" jdbcType="VARCHAR" />
+        <result column="storage_name" property="storageName" jdbcType="VARCHAR" />
+        <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+        <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+        <result column="house_code" property="houseCode" jdbcType="VARCHAR" />
+        <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+        <result column="hope_in_ware_house_code" property="hopeInWareHouseCode" jdbcType="VARCHAR" />
+        <result column="hope_in_ware_house_name" property="hopeInWareHouseName" jdbcType="VARCHAR" />
+        <result column="position_status" property="positionStatus" jdbcType="VARCHAR" />
+        <result column="qrcode_status" property="qrcodeStatus" jdbcType="VARCHAR" />
+        <result column="qc_status" property="qcStatus" jdbcType="VARCHAR" />
+        <result column="business_status" property="businessStatus" jdbcType="VARCHAR" />
+        <result column="container_status" property="containerStatus" jdbcType="VARCHAR" />
+        <result column="login_status" property="loginStatus" jdbcType="VARCHAR" />
+        <result column="qc_time" property="qcTime" jdbcType="TIMESTAMP" />
+        <result column="inventory_check_time" property="inventoryCheckTime" jdbcType="TIMESTAMP" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+
+   <sql id="base_column_list">
+     id , tenant_id , container_id , container_code , container_qrcode , container_name , father_qrcode , storage_id , storage_code , storage_name , area_code , area_name , house_code , house_name , hope_in_ware_house_code , hope_in_ware_house_name , position_status , qrcode_status , qc_status , business_status , container_status , login_status, qc_time , inventory_check_time , attach , note , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <select id="listPage" resultMap="ItemContainerManageResultMap" >
+        SELECT * from (SELECT <include refid="base_column_list"/> from mes_item_container_manage) a
+            ${ew.customSqlSegment}
+    </select>
+</mapper>

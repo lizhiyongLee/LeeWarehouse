@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.produce.mapper.WorkOrderMapper">
+    <resultMap id="WorkOrderResultMap" type="com.ils.modules.mes.produce.entity.WorkOrder">
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="father_order_id" property="fatherOrderId" jdbcType="VARCHAR"/>
+        <result column="father_order_no" property="fatherOrderNo" jdbcType="VARCHAR"/>
+        <result column="seq" property="seq" jdbcType="INTEGER"/>
+        <result column="process_id" property="processId" jdbcType="VARCHAR"/>
+        <result column="process_code" property="processCode" jdbcType="VARCHAR"/>
+        <result column="process_name" property="processName" jdbcType="VARCHAR"/>
+        <result column="external_order_no" property="externalOrderNo" jdbcType="VARCHAR"/>
+        <result column="order_layer" property="orderLayer" jdbcType="TINYINT"/>
+        <result column="product_type" property="productType" jdbcType="VARCHAR"/>
+        <result column="sale_order_id" property="saleOrderId" jdbcType="VARCHAR"/>
+        <result column="order_type" property="orderType" jdbcType="VARCHAR"/>
+        <result column="batch_type" property="batchType" jdbcType="VARCHAR"/>
+        <result column="batch_no" property="batchNo" jdbcType="VARCHAR"/>
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="spec" property="spec" jdbcType="VARCHAR"/>
+        <result column="plan_qty" property="planQty" jdbcType="DECIMAL"/>
+        <result column="completed_qty" property="completedQty" jdbcType="DECIMAL"/>
+        <result column="unit" property="unit" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="TINYINT"/>
+        <result column="pmc" property="pmc" jdbcType="VARCHAR"/>
+        <result column="director" property="director" jdbcType="VARCHAR"/>
+        <result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP"/>
+        <result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP"/>
+        <result column="real_start_time" property="realStartTime" jdbcType="TIMESTAMP"/>
+        <result column="real_end_time" property="realEndTime" jdbcType="TIMESTAMP"/>
+        <result column="workflow_type" property="workflowType" jdbcType="VARCHAR"/>
+        <result column="bom_id" property="bomId" jdbcType="VARCHAR"/>
+        <result column="route_id" property="routeId" jdbcType="VARCHAR"/>
+        <result column="product_id" property="productId" jdbcType="VARCHAR"/>
+        <result column="flow_id" property="flowId" jdbcType="VARCHAR"/>
+        <result column="audit_status" property="auditStatus" jdbcType="VARCHAR"/>
+        <result column="attach" property="attach" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <resultMap id="RequiredMaterialVOResultMap" type="com.ils.modules.mes.produce.vo.RequiredMaterialVO">
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="process_code" property="processCode" jdbcType="VARCHAR"/>
+        <result column="process_name" property="processName" jdbcType="VARCHAR"/>
+        <result column="total_qty" property="totalQty" jdbcType="DECIMAL"/>
+        <result column="unit_name" property="unitName" jdbcType="VARCHAR"/>
+        <result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP"/>
+        <result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+     tenant_id , id , order_no , father_order_id, father_order_no , seq , process_id , process_code , process_name , order_layer , product_type , sale_order_id , order_type , batch_type , batch_no , item_id , item_code , item_name , spec , plan_qty , completed_qty , unit , level , pmc , director , plan_start_time , plan_end_time , real_start_time , real_end_time , workflow_type , bom_id , route_id , product_id , flow_id , audit_status , attach , status , note , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <select id="listByFatherOrderId" parameterType="java.lang.String" resultMap="WorkOrderResultMap">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM mes_work_order
+        WHERE
+        father_order_id = #{fatherOrderId}
+    </select>
+
+    <select id="executeSql" parameterType="java.lang.String" resultType="java.lang.String">
+        ${sql}
+    </select>
+
+    <select id="getRequiredMaterial" parameterType="java.lang.String" resultMap="RequiredMaterialVOResultMap">
+   SELECT * FROM (SELECT a.plan_start_time,a.plan_end_time, a.order_no, b.process_name, b.process_code, b.item_name, b.item_code, b.total_qty, c.unit_name
+    FROM mes_work_order a
+    INNER JOIN mes_work_order_bom b ON a.id = b.order_id
+    INNER JOIN mes_unit c ON b.unit = c.id
+    UNION SELECT a.plan_start_time,a.plan_end_time,a.order_no, '无' AS process_name, '无' AS process_code, b.item_name, b.item_code, b.total_qty, b.unit_name FROM mes_work_order a
+    INNER JOIN mes_work_order_item_bom b ON a.id = b.order_id  WHERE a.status = 1
+    ) AS d  ${ew.customSqlSegment} order by item_name
+ </select>
+</mapper>

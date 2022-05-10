@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.factory.mapper.ReportTemplateMapper">
+    <resultMap id="ReportTemplateResultMap"  type="com.ils.modules.mes.base.factory.entity.ReportTemplate"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="template_name" property="templateName" jdbcType="VARCHAR" />
+        <result column="template_type" property="templateType" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    <resultMap id="DictModelMap" type="com.ils.common.system.vo.DictModel" >
+        <result column="id" property="value" jdbcType="VARCHAR"/>
+        <result column="template_name" property="text" jdbcType="VARCHAR"/>
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , template_name , template_type , note , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+
+    <select id="queryDictTemplate" resultMap="DictModelMap">
+    select id,template_name from mes_report_template;
+    </select>
+
+</mapper>

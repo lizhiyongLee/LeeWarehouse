@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.qc.mapper.NgItemMapper">
+    <resultMap id="NgItemResultMap"  type="com.ils.modules.mes.base.qc.entity.NgItem"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="ng_code" property="ngCode" jdbcType="VARCHAR" />
+        <result column="ng_name" property="ngName" jdbcType="VARCHAR" />
+        <result column="ng_type_id" property="ngTypeId" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+     <resultMap id="NgItemVOResultMap"  extends="NgItemResultMap" type="com.ils.modules.mes.base.qc.vo.NgItemVO"> 
+       <result column="ng_type_name" property="ngTypeName" jdbcType="VARCHAR" /> 
+    </resultMap>
+   <sql id="base_column_list">
+     tenant_id , id , ng_code , ng_name , ng_type_id , note , status , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  
+   <select id="queryPageList" parameterType="java.lang.String" resultMap="NgItemVOResultMap">
+  		 select a.*,b.ng_type_name from mes_ng_item a left join mes_ng_item_type b on a.ng_type_id = b.id
+   </select>
+  
+  <insert id="insertBatch">
+    insert into mes_ng_item ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.ngCode ,jdbcType=VARCHAR }, #{item.ngName ,jdbcType=VARCHAR }, #{item.ngTypeId ,jdbcType=VARCHAR }, #{item.note ,jdbcType=VARCHAR }, #{item.status ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.produce.mapper.SaleOrderLineMapper">
+     <resultMap id="SaleOrderLineResultMap"  type="com.ils.modules.mes.produce.entity.SaleOrderLine"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="sale_order_id" property="saleOrderId" jdbcType="VARCHAR" />
+        <result column="sale_order_no" property="saleOrderNo" jdbcType="VARCHAR" />
+        <result column="line_number" property="lineNumber" jdbcType="INTEGER" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="spec" property="spec" jdbcType="VARCHAR" />
+        <result column="sale_order_qty" property="saleOrderQty" jdbcType="DECIMAL" />
+        <result column="sale_order_complete_qty" property="saleOrderCompleteQty" jdbcType="DECIMAL" />
+        <result column="return_qty" property="returnQty" jdbcType="DECIMAL" />
+        <result column="plan_qty" property="planQty" jdbcType="DECIMAL" />
+        <result column="complete_qty" property="completeQty" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="sale_order_main_qty" property="saleOrderMainQty" jdbcType="DECIMAL" />
+        <result column="sale_order_complete_main_qty" property="saleOrderCompleteMainQty" jdbcType="DECIMAL" />
+        <result column="return_main_qty" property="returnMainQty" jdbcType="DECIMAL" />
+        <result column="plan_main_qty" property="planMainQty" jdbcType="DECIMAL" />
+        <result column="complete_main_qty" property="completeMainQty" jdbcType="DECIMAL" />
+        <result column="main_unit" property="mainUnit" jdbcType="VARCHAR" />
+        <result column="required_date" property="requiredDate" jdbcType="DATE" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    
+    <resultMap id="SaleOrderLineVOResultMap"   extends="SaleOrderLineResultMap"  type="com.ils.modules.mes.produce.vo.SaleOrderLineVO"> 
+        <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR" />    
+        <result column="order_create_time" property="orderCreateTime" jdbcType="TIMESTAMP" />
+        <result column="order_update_time" property="orderUpdateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+    <sql id="base_column_list">
+     tenant_id , id , sale_order_id , sale_order_no , line_number , item_id , item_code , item_name , spec , sale_order_qty , sale_order_complete_qty , return_qty , plan_qty , complete_qty , unit , sale_order_main_qty , sale_order_complete_main_qty , return_main_qty , plan_main_qty , complete_main_qty , main_unit , required_date , status , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_sale_order_line 
+		WHERE
+			 sale_order_id = #{id} 		
+	</delete>
+	
+	<select id="selectByMainId" parameterType="java.lang.String" resultMap="SaleOrderLineResultMap">
+		SELECT <include refid="base_column_list" />
+		FROM  mes_sale_order_line
+		WHERE
+			 sale_order_id = #{id} 		
+	</select>
+	
+		<select id="updateDecreaseSaleOrderLinePlanQty" >
+		   update mes_sale_order_line set plan_main_qty = ifnull(plan_main_qty,0)-#{planQty} ,plan_qty=(sale_order_qty*ifnull(plan_main_qty,0))/sale_order_main_qty	 where id =#{id} 			
+		</select>
+		
+		<select id="updateAddSaleOrderLinePlanQty" >
+		   update mes_sale_order_line set plan_main_qty = ifnull(plan_main_qty,0)+#{planQty} ,plan_qty=(sale_order_qty*ifnull(plan_main_qty,0))/sale_order_main_qty	 where id =#{id} 				
+		</select>
+	
+		<select id ="saleOrderLinePage" resultMap="SaleOrderLineVOResultMap">
+	    SELECT mes_sale_order_line.*,
+		mes_sale_order.status as order_status,
+		mes_sale_order.customer_name ,
+		mes_sale_order.create_time as order_create_time,
+		mes_sale_order.update_time as order_update_time
+		FROM  mes_sale_order inner join mes_sale_order_line on mes_sale_order.id = mes_sale_order_line.sale_order_id
+	    ${ew.customSqlSegment}	  
+	  </select>
+
+</mapper>

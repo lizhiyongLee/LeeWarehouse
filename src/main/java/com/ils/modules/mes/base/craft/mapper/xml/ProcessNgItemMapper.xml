@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.craft.mapper.ProcessNgItemMapper">
+     <resultMap id="ProcessNgItemResultMap"  type="com.ils.modules.mes.base.craft.entity.ProcessNgItem"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="ng_item_type_name" property="ngItemTypeName" jdbcType="VARCHAR" />
+        <result column="ng_item_type_id" property="ngItemTypeId" jdbcType="VARCHAR" />
+        <result column="ng_item_name" property="ngItemName" jdbcType="VARCHAR" />
+        <result column="ng_item_id" property="ngItemId" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <sql id="base_column_list">
+     tenant_id , id , process_id , ng_item_type_name , ng_item_type_id , ng_item_name , ng_item_id , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_process_ng_item 
+		WHERE
+			 process_id = #{id} 		
+	</delete>
+	
+	<select id="selectByMainId" parameterType="java.lang.String" resultMap="ProcessNgItemResultMap">
+		SELECT <include refid="base_column_list" />
+		FROM  mes_process_ng_item
+		WHERE
+			 process_id = #{id} 		
+	</select>
+</mapper>

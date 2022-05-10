@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.execution.mapper.WorkProduceTaskMapper">
+    <resultMap id="WorkProduceTaskResultMap"  type="com.ils.modules.mes.execution.entity.WorkProduceTask"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="task_code" property="taskCode" jdbcType="VARCHAR" />
+        <result column="plan_task_id" property="planTaskId" jdbcType="VARCHAR" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="seq" property="seq" jdbcType="INTEGER" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+        <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+        <result column="plan_qty" property="planQty" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="plan_date" property="planDate" jdbcType="DATE" />
+        <result column="shift_id" property="shiftId" jdbcType="VARCHAR" />
+        <result column="team_id" property="teamId" jdbcType="VARCHAR" />
+        <result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP" />
+        <result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP" />
+        <result column="real_start_time" property="realStartTime" jdbcType="TIMESTAMP" />
+        <result column="real_end_time" property="realEndTime" jdbcType="TIMESTAMP" />
+        <result column="total_qty" property="totalQty" jdbcType="DECIMAL" />
+        <result column="good_qty" property="goodQty" jdbcType="DECIMAL" />
+        <result column="bad_qty" property="badQty" jdbcType="DECIMAL" />
+        <result column="exe_status" property="exeStatus" jdbcType="VARCHAR" />
+        <result column="is_sop" property="sop" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+        <result column="is_sop" property="sop" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <resultMap id="WorkProduceTaskInfoResultMap"  extends="WorkProduceTaskResultMap" type="com.ils.modules.mes.execution.vo.WorkProduceTaskInfoVO"> 
+      <result column="order_item_id" property="orderItemId" jdbcType="VARCHAR" />
+      <result column="order_item_code" property="orderItemCode" jdbcType="VARCHAR" />
+      <result column="order_item_name" property="orderItemName" jdbcType="VARCHAR" />
+      <result column="director" property="director" jdbcType="VARCHAR" />
+      <result column="spec" property="spec" jdbcType="VARCHAR" />
+      <result column="process_plan_qty" property="processPlanQty" jdbcType="DECIMAL" />
+      <result column="completed_qty" property="processCompletedQty" jdbcType="DECIMAL" />
+     <result column="prior_code" property="priorCode" jdbcType="VARCHAR" />
+      <result column="next_code" property="nextCode" jdbcType="VARCHAR" />
+    </resultMap>
+    
+   <sql id="base_column_list">
+     tenant_id , id , task_code , plan_task_id , order_id , order_no , batch_no , process_id , process_code , process_name ,seq, item_id , item_code , item_name , station_id , station_code , station_name , plan_qty , unit , plan_date , shift_id , team_id , plan_start_time , plan_end_time , real_start_time , real_end_time , total_qty , good_qty , bad_qty , exe_status , is_sop , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+  
+  <insert id="insertBatch">
+    insert into mes_work_produce_task ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.taskCode ,jdbcType=VARCHAR }, #{item.planTaskId ,jdbcType=VARCHAR }, #{item.orderId ,jdbcType=VARCHAR }, #{item.orderNo ,jdbcType=VARCHAR }, #{item.batchNo ,jdbcType=VARCHAR }, #{item.processId ,jdbcType=VARCHAR }, #{item.processCode ,jdbcType=VARCHAR }, #{item.processName ,jdbcType=VARCHAR }, #{item.seq ,jdbcType=INTEGER }, #{item.itemId ,jdbcType=VARCHAR }, #{item.itemCode ,jdbcType=VARCHAR }, #{item.itemName ,jdbcType=VARCHAR }, #{item.stationId ,jdbcType=VARCHAR }, #{item.stationCode ,jdbcType=VARCHAR }, #{item.stationName ,jdbcType=VARCHAR }, #{item.planQty ,jdbcType=DECIMAL }, #{item.unit ,jdbcType=VARCHAR }, #{item.planDate ,jdbcType=DATE }, #{item.shiftId ,jdbcType=VARCHAR }, #{item.teamId ,jdbcType=VARCHAR }, #{item.planStartTime ,jdbcType=TIMESTAMP }, #{item.planEndTime ,jdbcType=TIMESTAMP }, #{item.realStartTime ,jdbcType=TIMESTAMP }, #{item.realEndTime ,jdbcType=TIMESTAMP }, #{item.totalQty ,jdbcType=DECIMAL }, #{item.goodQty ,jdbcType=DECIMAL }, #{item.badQty ,jdbcType=DECIMAL }, #{item.exeStatus ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+  
+  <delete id="deleteByPlanTaskId" parameterType="java.lang.String">
+		DELETE 
+		FROM  mes_work_produce_task 
+		WHERE
+			 plan_task_id = #{id} 		
+	</delete>
+	
+	<select id="todoList" resultMap="WorkProduceTaskResultMap" >	
+		select <include refid="base_column_list" />  from mes_work_produce_task a where not exists (select 1 from mes_work_plan_task_employee b where task_id = a.plan_task_id ) 
+		and exe_status in ('1','3')
+		and is_deleted=0
+		<choose>
+        <when test="userId !=null and userId != ''">
+            and  not exists (select 1 from mes_work_produce_task_employee c where c.using_type in ('1','2') and  c.excute_task_id = a.id and c.employee_id=#{userId} )
+        </when>
+        <otherwise>
+             and  not exists (select 1 from mes_work_produce_task_employee c where c.using_type in ('1','2') and  c.excute_task_id = a.id )
+        </otherwise>
+    </choose>	
+   	   <if test = " ew.sqlSegment != null and ew.sqlSegment != '' ">	
+   	  		 and ${ew.sqlSegment}
+   	   </if>			
+  </select>
+  
+  
+  <select id="doneList" resultMap="WorkProduceTaskResultMap" >	
+		select <include refid="base_column_list" />  from mes_work_produce_task a where
+		 is_deleted=0
+		and exists (select 1 from mes_work_produce_task_employee c where c.using_type in ('1','2') and  c.excute_task_id = a.id and c.employee_id=#{userId} )       
+   	   <if test = " ew.sqlSegment != null and ew.sqlSegment != '' ">	
+   	  		 and ${ew.sqlSegment}
+   	   </if>			
+  </select> 
+  
+  
+  <select id ="getProduceTaskInfoById" resultMap="WorkProduceTaskInfoResultMap">
+   select a.*,c.prior_code,c.next_code,c.plan_qty as process_plan_qty,c.completed_qty,
+   d.spec, d.item_id as order_item_id,d.item_code as order_item_code,d.item_name as order_item_name,d.director
+   from mes_work_produce_task a inner join mes_work_plan_task b on a.plan_task_id =b.id 
+   inner join  mes_work_process_task c on b.process_task_id =c.id
+   inner join mes_work_order d on a.order_id =d.id where a.id =#{id}
+  </select>
+  
+  <resultMap id="WorkProduceTaskQueryVOResultMap"  type="com.ils.modules.mes.execution.vo.WorkProduceTaskQueryVO"> 
+       <result column="id" property="id" jdbcType="VARCHAR" />
+      <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+      <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+      <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+      <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+      <result column="task_code" property="taskCode" jdbcType="VARCHAR" />
+      <result column="batch_no" property="batchNo" jdbcType="VARCHAR"/>
+      <result column="exe_status" property="exeStatus" jdbcType="VARCHAR"/>
+      <result column="start_flag" property="startFlag" jdbcType="VARCHAR"/>
+      <result column="end_flag" property="endFlag" jdbcType="VARCHAR"/>
+      <result column="good_qty" property="goodQty" jdbcType="DECIMAL"/>
+      <result column="plan_qty" property="planQty" jdbcType="DECIMAL"/>
+      <result column="process_code" property="processCode" jdbcType="VARCHAR"/>
+      <result column="process_name" property="processName" jdbcType="VARCHAR"/>
+      <result column="station_code" property="stationCode" jdbcType="VARCHAR"/>
+      <result column="station_name" property="stationName" jdbcType="VARCHAR"/>
+      <result column="employee" property="employee" jdbcType="VARCHAR"/>
+      <result column="is_sop" property="sop" jdbcType="VARCHAR"/>
+      <result column="plan_start_time" property="planStartTime" jdbcType="TIMESTAMP"/>
+      <result column="plan_end_time" property="planEndTime" jdbcType="TIMESTAMP"/>
+      <result column="real_start_time" property="realStartTime" jdbcType="TIMESTAMP"/>
+      <result column="real_end_time" property="realEndTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+    <select id="queryProduceTaskList" resultMap="WorkProduceTaskQueryVOResultMap">
+        select * from (select a.id,b.id AS order_id,b.order_no,b.item_code,b.item_name,a.task_code,a.batch_no,a.exe_status,
+        case when a.plan_start_time=null or a.plan_start_time &lt;if(a.real_start_time is null ,now(),a.real_start_time)
+        then '1' else '2' end as start_flag,
+        case when a.plan_end_time=null or a.plan_end_time &lt;if(a.real_end_time is null,now(),a.real_end_time) then '1'
+        else '2' end as end_flag,a.process_id,b.item_id,
+        a.good_qty,a.plan_qty,a.process_code,a.process_name,a.station_id,a.station_code,a.station_name,c.employee,c.employee_id,
+        a.plan_start_time,a.plan_end_time,a.real_start_time,a.real_end_time,a.is_sop
+        from mes_work_produce_task a inner join mes_work_order b on a.order_id = b.id
+        left join (select excute_task_id,group_concat(employee_name) as employee,group_concat(employee_id) as
+        employee_id
+        from mes_work_produce_task_employee where using_type in ('1','2') group by excute_task_id) c on a.id
+        =c.excute_task_id) d
+        <if test=" ew.customSqlSegment != null and ew.customSqlSegment != '' ">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
+
+    <select id="allQrcodeTaskList" resultMap="WorkProduceTaskResultMap">
+        select
+        <include refid="base_column_list"></include>
+        from mes_work_produce_task wpt
+        where exe_status in (2, 3, 4)
+        and exists(select 1 from mes_item where id = wpt.item_id and is_qrcode = '1')
+        and is_deleted = 0
+        <if test=" ew.sqlSegment != null and ew.sqlSegment != '' ">
+            and ${ew.sqlSegment}
+        </if>
+    </select>
+</mapper>

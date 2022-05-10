@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.execution.mapper.WorkProduceRecordMapper">
+    <resultMap id="WorkProduceRecordResultMap"  type="com.ils.modules.mes.execution.entity.WorkProduceRecord"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="produce_task_id" property="produceTaskId" jdbcType="VARCHAR" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="report_type" property="reportType" jdbcType="VARCHAR" />
+        <result column="process_id" property="processId" jdbcType="VARCHAR" />
+        <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+        <result column="process_name" property="processName" jdbcType="VARCHAR" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="item_cell_state_id" property="itemCellStateId" jdbcType="VARCHAR" />
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+        <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+        <result column="customer_batch" property="customerBatch" jdbcType="VARCHAR" />
+        <result column="sequence_code" property="sequenceCode" jdbcType="VARCHAR" />
+        <result column="submit_qty" property="submitQty" jdbcType="DECIMAL" />
+        <result column="unit" property="unit" jdbcType="VARCHAR" />
+        <result column="qc_status" property="qcStatus" jdbcType="VARCHAR" />
+        <result column="produce_date" property="produceDate" jdbcType="DATE" />
+        <result column="owner_date" property="ownerDate" jdbcType="DATE" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="product_time" property="productTime" jdbcType="DECIMAL" />
+        <result column="time_unit" property="timeUnit" jdbcType="VARCHAR" />
+        <result column="employee_id" property="employeeId" jdbcType="VARCHAR" />
+        <result column="employee_code" property="employeeCode" jdbcType="VARCHAR" />
+        <result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
+        <result column="team_id" property="teamId" jdbcType="VARCHAR" />
+        <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+        <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+        <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+        <result column="sop_step_id" property="sopStepId" jdbcType="VARCHAR" />
+        <result column="sop_control_id" property="sopControlId" jdbcType="VARCHAR" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+        <result column="product_type" property="productType" jdbcType="TINYINT" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+     <resultMap id="ProcessRecordVOResultMap"  type="com.ils.modules.mes.execution.vo.ProcessRecordVO"> 
+        <result column="process_task_id" property="processTaskId" jdbcType="VARCHAR" /> 
+        <result column="submit_total_qty" property="submitTotalQty" jdbcType="DECIMAL" />
+    </resultMap>
+    
+   <sql id="base_column_list">
+     tenant_id , id , produce_task_id , order_id , order_no , report_type , process_id , process_code , process_name , item_id , item_code , item_name , item_cell_state_id , qrcode , batch_no , customer_batch , sequence_code , submit_qty , unit , qc_status , produce_date , owner_date , start_time , end_time , product_time , time_unit , employee_id , employee_code , employee_name , team_id , station_id , station_code , station_name , sop_step_id , report_context , attach , note , unit_name , create_by , create_time , update_by , update_time , is_deleted
+  </sql>
+  
+  <insert id="insertBatch">
+    insert into mes_work_produce_record ( <include refid="base_column_list" /> ) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.tenantId ,jdbcType=VARCHAR }, #{item.id ,jdbcType=VARCHAR }, #{item.produceTaskId ,jdbcType=VARCHAR }, #{item.orderId ,jdbcType=VARCHAR }, #{item.orderNo ,jdbcType=VARCHAR }, #{item.reportType ,jdbcType=VARCHAR }, #{item.processId ,jdbcType=VARCHAR }, #{item.processCode ,jdbcType=VARCHAR }, #{item.processName ,jdbcType=VARCHAR }, #{item.itemId ,jdbcType=VARCHAR }, #{item.itemCode ,jdbcType=VARCHAR }, #{item.itemName ,jdbcType=VARCHAR }, #{item.itemCellStateId ,jdbcType=VARCHAR }, #{item.qrcode ,jdbcType=VARCHAR }, #{item.batchNo ,jdbcType=VARCHAR }, #{item.customerBatch ,jdbcType=VARCHAR }, #{item.sequenceCode ,jdbcType=VARCHAR }, #{item.submitQty ,jdbcType=DECIMAL }, #{item.unit ,jdbcType=VARCHAR }, #{item.qcStatus ,jdbcType=VARCHAR }, #{item.produceDate ,jdbcType=DATE }, #{item.ownerDate ,jdbcType=DATE }, #{item.startTime ,jdbcType=TIMESTAMP }, #{item.endTime ,jdbcType=TIMESTAMP }, #{item.productTime ,jdbcType=DECIMAL }, #{item.timeUnit ,jdbcType=VARCHAR }, #{item.employeeId ,jdbcType=VARCHAR }, #{item.employeeCode ,jdbcType=VARCHAR }, #{item.employeeName ,jdbcType=VARCHAR }, #{item.teamId ,jdbcType=VARCHAR }, #{item.stationId ,jdbcType=VARCHAR }, #{item.stationCode ,jdbcType=VARCHAR }, #{item.stationName ,jdbcType=VARCHAR }, #{item.attach ,jdbcType=VARCHAR }, #{item.note ,jdbcType=VARCHAR }, #{item.createBy ,jdbcType=VARCHAR }, #{item.createTime ,jdbcType=TIMESTAMP }, #{item.updateBy ,jdbcType=VARCHAR }, #{item.updateTime ,jdbcType=TIMESTAMP }, #{item.deleted ,jdbcType=TINYINT })
+    </foreach>  
+  </insert>
+  
+  <select id="queryProcessSubmitQty"  resultMap="ProcessRecordVOResultMap" >
+		select a.process_task_id ,sum(ifnull(submit_qty,0)) submit_total_qty from mes_work_plan_task a  inner join mes_work_produce_task b on a.id = b.plan_task_id 
+			inner join mes_work_produce_record c on b.id = c.produce_task_id
+			${ew.customSqlSegment}
+  </select>
+</mapper>

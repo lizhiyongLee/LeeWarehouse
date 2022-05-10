@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ils.modules.mes.base.factory.mapper.WorkShopMapper">
+    <resultMap id="WorkShopResultMap"  type="com.ils.modules.mes.base.factory.entity.WorkShop"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+        <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+        <result column="up_area" property="upArea" jdbcType="VARCHAR" />
+        <result column="up_area_name" property="upAreaName" jdbcType="VARCHAR" />
+        <result column="duty_person" property="dutyPerson" jdbcType="VARCHAR" />
+        <result column="duty_person_name" property="dutyPersonName" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="attach" property="attach" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_deleted" property="deleted" jdbcType="TINYINT" />
+    </resultMap>
+    
+    <resultMap id="NodeVOResultMap"  type="com.ils.modules.mes.base.factory.vo.NodeVO"> 
+        <result column="tenant_id" property="tenantId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="up_area" property="upArea" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="node_type" property="nodeType" jdbcType="VARCHAR" />
+        <result column="duty_person_name" property="dutyPersonName" jdbcType="VARCHAR" />
+         <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+       <result column="note" property="note" jdbcType="VARCHAR" />      
+    </resultMap>
+
+    <sql id="base_column_list">
+     tenant_id , id , shop_code , shop_name , qrcode , up_area , up_area_name , duty_person , duty_person_name , status , attach , note , create_by , create_time , update_by , update_time , is_deleted 
+  </sql>
+  
+  
+   <select id="queryInstitutionList" parameterType="java.lang.String" resultMap="NodeVOResultMap">
+		select * from (select 
+								tenant_id as  tenant_id,
+								id,
+								'' as up_area,
+								factory_code as code,
+								factory_name as name,
+								'1' as node_type,
+								'' as duty_person_name,
+								status ,
+								'' as qrcode,
+								note
+								 from mes_factory where is_deleted=0
+								union
+								select 
+								tenant_id as  tenant_id,
+								id,
+								up_area as up_area,
+								shop_code as code,
+								shop_name as name,
+								'2' as node_type,
+								duty_person_name as duty_person_name,
+								status ,
+								qrcode,
+								note
+								from
+								mes_work_shop where is_deleted=0
+								union
+								select 
+								tenant_id as  tenant_id,
+								id,
+								up_area as up_area,
+								line_code as code,
+								line_name as name,
+								'3' as node_type,
+								duty_person_name as duty_person_name,
+								status ,
+								qrcode,
+								note
+								from
+								mes_work_line where is_deleted=0
+								union
+								select 
+								tenant_id as  tenant_id,
+								id,
+								up_area as up_area,
+								station_code as code,
+								station_name as name,
+								'4' as node_type,
+								duty_person_name as duty_person_name,
+								status ,
+								qrcode,
+								note
+								from
+								mes_workstation where is_deleted=0) a 
+								${ew.customSqlSegment}	  
+	</select>
+	
+	
+	<select id="queryStationList" parameterType="java.lang.String" resultMap="NodeVOResultMap">
+				select * from ( select 
+								tenant_id as  tenant_id,
+								id,
+								'' as up_area,
+								shop_code as code,
+								shop_name as name,
+								'2' as node_type,
+								duty_person_name as duty_person_name,
+								status ,
+								qrcode,
+								note
+								from
+								mes_work_shop where is_deleted=0
+								union
+								select 
+								tenant_id as  tenant_id,
+								id,
+								up_area as up_area,
+								line_code as code,
+								line_name as name,
+								'3' as node_type,
+								duty_person_name as duty_person_name,
+								status ,
+								qrcode,
+								note
+								from
+								mes_work_line where is_deleted=0
+								union
+								select 
+								tenant_id as  tenant_id,
+								id,
+								up_area as up_area,
+								station_code as code,
+								station_name as name,
+								'4' as node_type,
+								duty_person_name as duty_person_name,
+								status ,
+								qrcode,
+								note
+								from
+								mes_workstation where is_deleted=0) a 
+						${ew.customSqlSegment}	
+	</select>
+	
+	<select id="queryAssignStationTreeList" parameterType="java.lang.String" resultMap="NodeVOResultMap">
+				       select 
+								tenant_id as  tenant_id,
+								id,
+								'' as up_area,
+								shop_code as code,
+								shop_name as name,
+								'2' as node_type,
+								duty_person_name as duty_person_name,
+								status ,
+								qrcode,
+								note
+								from
+								mes_work_shop where is_deleted=0
+								union
+								select 
+								tenant_id as  tenant_id,
+								id,
+								up_area as up_area,
+								line_code as code,
+								line_name as name,
+								'3' as node_type,
+								duty_person_name as duty_person_name,
+								status ,
+								qrcode,
+								note
+								from
+								mes_work_line where is_deleted=0
+								union
+								select 
+								tenant_id as  tenant_id,
+								id,
+								up_area as up_area,
+								station_code as code,
+								station_name as name,
+								'4' as node_type,
+								duty_person_name as duty_person_name,
+								status ,
+								qrcode,
+								note
+								from
+								mes_workstation 
+								${ew.customSqlSegment}	
+	</select>
+
+
+
+	
+	
+</mapper>
